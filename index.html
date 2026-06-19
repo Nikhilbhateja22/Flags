@@ -12,7 +12,6 @@
     --ink-light:#22385C;
     --ink-line:#3A5278;
     --parchment:#F2E8D2;
-    --parchment-dim:#E5D8B8;
     --brass:#C9A24B;
     --brass-bright:#E0BD6B;
     --teal:#3E6E64;
@@ -21,280 +20,92 @@
     --text-parchment:#1B2A4A;
   }
   *{box-sizing:border-box;}
-  body{
-    margin:0;
-    background:var(--ink);
-    color:var(--text-ink);
-    font-family:'Inter',sans-serif;
-    min-height:100vh;
-  }
+  body{margin:0;background:var(--ink);color:var(--text-ink);font-family:'Inter',sans-serif;min-height:100vh;}
   .wrap{max-width:980px;margin:0 auto;padding:28px 20px 60px;}
 
   /* Header */
   header{margin-bottom:22px;}
-  .eyebrow{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:11px;
-    letter-spacing:.18em;
-    text-transform:uppercase;
-    color:var(--brass-bright);
-    margin:0 0 6px;
-  }
-  h1{
-    font-family:'Fraunces',serif;
-    font-weight:900;
-    font-size:clamp(28px,5vw,42px);
-    margin:0 0 6px;
-    letter-spacing:-.01em;
-  }
-  .sub{
-    color:#C8D3E6;
-    font-size:14.5px;
-    max-width:560px;
-    line-height:1.5;
-    margin:0;
-  }
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass-bright);margin:0 0 6px;}
+  h1{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(28px,5vw,42px);margin:0 0 6px;letter-spacing:-.01em;}
+  .sub{color:#C8D3E6;font-size:14.5px;max-width:560px;line-height:1.5;margin:0;}
 
   /* Tabs */
-  nav.tabs{
-    display:flex;
-    gap:2px;
-    margin:26px 0 22px;
-    border-bottom:1px solid var(--ink-line);
-  }
-  nav.tabs button{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:12.5px;
-    letter-spacing:.06em;
-    text-transform:uppercase;
-    background:none;
-    border:none;
-    color:#8FA1C2;
-    padding:10px 16px 12px;
-    cursor:pointer;
-    border-bottom:2px solid transparent;
-    transition:color .15s, border-color .15s;
-  }
+  nav.tabs{display:flex;gap:2px;margin:26px 0 22px;border-bottom:1px solid var(--ink-line);}
+  nav.tabs button{font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;background:none;border:none;color:#8FA1C2;padding:10px 16px 12px;cursor:pointer;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;}
   nav.tabs button:hover{color:var(--text-ink);}
-  nav.tabs button.active{
-    color:var(--brass-bright);
-    border-bottom-color:var(--brass);
-  }
+  nav.tabs button.active{color:var(--brass-bright);border-bottom-color:var(--brass);}
   nav.tabs button:focus-visible{outline:2px solid var(--brass-bright);outline-offset:2px;}
-
   .panel{display:none;}
   .panel.active{display:block;}
 
-  /* Region chips (Study) */
-  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;}
-  .chip{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:12px;
-    padding:6px 13px;
-    border-radius:999px;
-    border:1px solid var(--ink-line);
-    background:var(--ink-light);
-    color:#C8D3E6;
-    cursor:pointer;
+  /* Search bar */
+  .search-wrap{position:relative;margin-bottom:16px;}
+  .search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);opacity:.45;pointer-events:none;}
+  #searchInput{
+    width:100%;padding:9px 12px 9px 36px;
+    background:var(--ink-light);border:1px solid var(--ink-line);border-radius:6px;
+    color:var(--text-ink);font-family:'IBM Plex Mono',monospace;font-size:13px;
+    outline:none;transition:border-color .15s;
   }
-  .chip.active{
-    background:var(--brass);
-    color:var(--ink);
-    border-color:var(--brass);
-    font-weight:600;
-  }
+  #searchInput::placeholder{color:#6070A0;}
+  #searchInput:focus{border-color:var(--brass);}
+  .no-results{font-family:'IBM Plex Mono',monospace;font-size:13px;color:#6070A0;padding:20px 0;}
+
+  /* Region chips */
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+  .chip{font-family:'IBM Plex Mono',monospace;font-size:12px;padding:6px 13px;border-radius:999px;border:1px solid var(--ink-line);background:var(--ink-light);color:#C8D3E6;cursor:pointer;}
+  .chip.active{background:var(--brass);color:var(--ink);border-color:var(--brass);font-weight:600;}
   .chip:focus-visible{outline:2px solid var(--brass-bright);outline-offset:2px;}
 
   /* Card grid */
-  .grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(132px,1fr));
-    gap:14px;
-  }
-  .card{
-    position:relative;
-    aspect-ratio:1/1.05;
-    cursor:pointer;
-    perspective:600px;
-  }
-  .card-inner{
-    position:relative;
-    width:100%;height:100%;
-    transition:transform .45s cubic-bezier(.4,.2,.2,1), rotate .2s;
-    transform-style:preserve-3d;
-  }
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;}
+  .card{position:relative;aspect-ratio:1/1.18;cursor:pointer;perspective:600px;}
+  .card-inner{position:relative;width:100%;height:100%;transition:transform .45s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d;}
   .card.flipped .card-inner{transform:rotateY(180deg);}
-  .card-face{
-    position:absolute;inset:0;
-    backface-visibility:hidden;
-    border-radius:6px;
-    background:var(--parchment);
-    border:2px dashed var(--brass);
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    box-shadow:0 3px 8px rgba(0,0,0,.25);
-  }
-  .card-front{padding:14px;flex-direction:column;gap:8px;}
-  .card-name{
-    font-family:'Inter',sans-serif;
-    font-weight:600;
-    font-size:11.5px;
-    color:var(--text-parchment);
-    text-align:center;
-    line-height:1.25;
-    padding:0 4px;
-  }
-  .flag-img{
-    display:block;
-    border-radius:3px;
-    border:1px solid rgba(27,42,74,.25);
-    box-shadow:0 1px 4px rgba(0,0,0,.25);
-    object-fit:cover;
-    background:#fff;
-  }
-  .flag-img.study{height:54px;max-width:100%;}
-  .flag-img.quiz{height:130px;}
-  .card-back{
-    transform:rotateY(180deg);
-    color:var(--text-parchment);
-    padding:8px;
-    text-align:center;
-  }
-  .card-back .nm{
-    font-family:'Fraunces',serif;
-    font-weight:700;
-    font-size:13.5px;
-    line-height:1.2;
-    margin-bottom:4px;
-  }
-  .card-back .nt{
-    font-size:10.5px;
-    line-height:1.3;
-    color:#4A5A7A;
-  }
-  .stamp{
-    position:absolute;top:-7px;right:-7px;
-    width:30px;height:30px;border-radius:50%;
-    background:var(--ink);
-    border:2px solid var(--brass);
-    color:var(--brass-bright);
-    font-family:'IBM Plex Mono',monospace;
-    font-size:9px;font-weight:600;
-    display:flex;align-items:center;justify-content:center;
-    letter-spacing:.02em;
-  }
+  .card-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:6px;background:var(--parchment);border:2px dashed var(--brass);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 3px 8px rgba(0,0,0,.25);}
+  .card-front{padding:12px;flex-direction:column;gap:7px;}
+  .card-name{font-weight:600;font-size:11px;color:var(--text-parchment);text-align:center;line-height:1.25;padding:0 4px;}
+  .flag-img{display:block;border-radius:3px;border:1px solid rgba(27,42,74,.25);box-shadow:0 1px 4px rgba(0,0,0,.25);object-fit:cover;background:#fff;}
+  .flag-img.study{height:50px;max-width:100%;}
+  .flag-img.quiz{height:130px;width:220px;object-fit:cover;}
+  .card-back{transform:rotateY(180deg);color:var(--text-parchment);padding:10px;text-align:center;justify-content:flex-start;padding-top:14px;gap:0;}
+  .card-back .cb-flag{height:36px;max-width:90%;border-radius:2px;border:1px solid rgba(27,42,74,.2);margin-bottom:7px;object-fit:cover;background:#fff;}
+  .card-back .nm{font-family:'Fraunces',serif;font-weight:700;font-size:12.5px;line-height:1.2;margin-bottom:3px;color:var(--text-parchment);}
+  .card-back .cap{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:var(--brass);margin-bottom:4px;letter-spacing:.04em;}
+  .card-back .nt{font-size:9.5px;line-height:1.3;color:#4A5A7A;margin-bottom:3px;}
+  .card-back .fact{font-size:9px;line-height:1.3;color:#6A7A9A;font-style:italic;}
+  .stamp{position:absolute;top:-7px;right:-7px;width:30px;height:30px;border-radius:50%;background:var(--ink);border:2px solid var(--brass);color:var(--brass-bright);font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;display:flex;align-items:center;justify-content:center;}
 
   /* Quiz */
-  .quiz-box{
-    max-width:440px;margin:0 auto;
-    text-align:center;
-  }
-  .quiz-flag{
-    margin:10px 0 6px;
-    display:flex;
-    justify-content:center;
-  }
-  .quiz-stats{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:12px;
-    color:#8FA1C2;
-    margin-bottom:22px;
-  }
+  .quiz-top{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:14px;}
+  .quiz-mode-btn{font-family:'IBM Plex Mono',monospace;font-size:11px;padding:5px 12px;border-radius:999px;border:1px solid var(--ink-line);background:var(--ink-light);color:#8FA1C2;cursor:pointer;letter-spacing:.04em;transition:all .15s;}
+  .quiz-mode-btn.active{background:var(--brass);color:var(--ink);border-color:var(--brass);font-weight:600;}
+  .quiz-box{max-width:460px;margin:0 auto;text-align:center;}
+  .quiz-flag{margin:0 0 8px;display:flex;justify-content:center;}
+  .quiz-question{font-family:'IBM Plex Mono',monospace;font-size:13px;color:#C8D3E6;margin-bottom:8px;min-height:22px;}
+  .quiz-stats{font-family:'IBM Plex Mono',monospace;font-size:12px;color:#8FA1C2;margin-bottom:20px;}
   .quiz-stats span{color:var(--brass-bright);}
-  .opt-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-  }
-  .opt{
-    font-family:'Inter',sans-serif;
-    font-size:14.5px;
-    font-weight:600;
-    padding:14px 10px;
-    border-radius:6px;
-    border:1px solid var(--ink-line);
-    background:var(--ink-light);
-    color:var(--text-ink);
-    cursor:pointer;
-    transition:background .15s,border-color .15s,transform .1s;
-  }
+  .opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .opt{font-family:'Inter',sans-serif;font-size:13.5px;font-weight:600;padding:13px 10px;border-radius:6px;border:1px solid var(--ink-line);background:var(--ink-light);color:var(--text-ink);cursor:pointer;transition:background .15s,border-color .15s;}
   .opt:hover{border-color:var(--brass);}
   .opt:focus-visible{outline:2px solid var(--brass-bright);outline-offset:2px;}
   .opt.correct{background:var(--teal);border-color:var(--teal);}
   .opt.wrong{background:var(--rust);border-color:var(--rust);}
   .opt[disabled]{cursor:default;}
-  .feedback{
-    min-height:20px;
-    font-family:'IBM Plex Mono',monospace;
-    font-size:12.5px;
-    margin-top:16px;
-    color:var(--brass-bright);
-  }
-  .reset-link{
-    margin-top:30px;
-    font-family:'IBM Plex Mono',monospace;
-    font-size:11px;
-    color:#6E83AB;
-    background:none;border:none;cursor:pointer;
-    text-decoration:underline;
-  }
+  .feedback{min-height:20px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;margin-top:16px;color:var(--brass-bright);}
+  .reset-link{margin-top:28px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6E83AB;background:none;border:none;cursor:pointer;text-decoration:underline;}
 
-  /* Patterns tab */
-  .pattern{
-    background:var(--ink-light);
-    border:1px solid var(--ink-line);
-    border-radius:6px;
-    padding:16px 18px;
-    margin-bottom:14px;
-  }
-  .pattern h3{
-    font-family:'Fraunces',serif;
-    font-size:16px;
-    margin:0 0 6px;
-    color:var(--brass-bright);
-  }
-  .pattern p{
-    font-size:13px;line-height:1.5;color:#C8D3E6;margin:0 0 10px;
-  }
-  .pattern .flags{
-    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
-  }
-  .flag-pill{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    background:rgba(255,255,255,0.06);
-    border:1px solid var(--ink-line);
-    border-radius:8px;
-    padding:6px 12px 6px 6px;
-  }
-  .flag-pill img{
-    width:48px;
-    height:32px;
-    object-fit:cover;
-    border-radius:3px;
-    border:1px solid rgba(255,255,255,0.15);
-    display:block;
-    background:#1B2A4A;
-  }
-  .flag-pill .fn{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:11.5px;
-    color:#C8D3E6;
-    white-space:nowrap;
-  }
+  /* Patterns */
+  .pattern{background:var(--ink-light);border:1px solid var(--ink-line);border-radius:6px;padding:16px 18px;margin-bottom:14px;}
+  .pattern h3{font-family:'Fraunces',serif;font-size:16px;margin:0 0 6px;color:var(--brass-bright);}
+  .pattern p{font-size:13px;line-height:1.5;color:#C8D3E6;margin:0 0 12px;}
+  .pattern .flags{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .flag-pill{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.06);border:1px solid var(--ink-line);border-radius:8px;padding:5px 12px 5px 5px;}
+  .flag-pill img{width:48px;height:32px;object-fit:cover;border-radius:3px;border:1px solid rgba(255,255,255,0.12);display:block;background:#1B2A4A;}
+  .flag-pill .fn{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#C8D3E6;white-space:nowrap;}
 
-  footer{
-    margin-top:40px;
-    padding-top:16px;
-    border-top:1px solid var(--ink-line);
-    font-size:11.5px;
-    color:#6E83AB;
-    line-height:1.6;
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    .card-inner{transition:none;}
-  }
+  footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--ink-line);font-size:11.5px;color:#6E83AB;line-height:1.6;}
+  @media(prefers-reduced-motion:reduce){.card-inner{transition:none;}}
 </style>
 </head>
 <body>
@@ -302,7 +113,7 @@
   <header>
     <p class="eyebrow">Field Atlas · 197 entries</p>
     <h1>Flag Atlas</h1>
-    <p class="sub">Study by region to learn the patterns first, then drill recall in the quiz. Missed flags come back around more often — that's the point.</p>
+    <p class="sub">Study by region, then drill recall in the quiz. Flip cards reveal the capital, a flag note, and a fun fact. Missed flags come back more often.</p>
   </header>
 
   <nav class="tabs">
@@ -312,14 +123,24 @@
   </nav>
 
   <section class="panel active" id="panel-study">
+    <div class="search-wrap">
+      <svg width="16" height="16" fill="none" stroke="#F2E8D2" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" placeholder="Search country…" autocomplete="off">
+    </div>
     <div class="chips" id="chips"></div>
     <div class="grid" id="studyGrid"></div>
+    <div class="no-results" id="noResults" style="display:none">No countries match that search.</div>
   </section>
 
   <section class="panel" id="panel-quiz">
+    <div class="quiz-top">
+      <button class="quiz-mode-btn active" data-mode="flag">Identify the flag</button>
+      <button class="quiz-mode-btn" data-mode="capital">Name the capital</button>
+    </div>
     <div class="quiz-box">
       <div class="quiz-flag" id="quizFlag"></div>
-      <div class="quiz-stats" id="quizStats">Loading your progress…</div>
+      <div class="quiz-question" id="quizQuestion"></div>
+      <div class="quiz-stats" id="quizStats">Loading…</div>
       <div class="opt-grid" id="quizOpts"></div>
       <div class="feedback" id="quizFeedback"></div>
       <button class="reset-link" id="resetBtn">reset progress</button>
@@ -331,8 +152,7 @@
   </section>
 
   <footer>
-    Flag images (Study &amp; Quiz) load from flagcdn.com — they need an internet connection to appear.<br>
-    Pattern flags use built-in emoji so they always show instantly.<br>
+    Flag images load from flagcdn.com — internet connection required for images.<br>
     Quiz progress is saved on this device only.
   </footer>
 </div>
@@ -342,246 +162,218 @@
 
   const COUNTRIES = [
     // Europe
-    {c:"AL",n:"Albania",r:"Europe"},
-    {c:"AD",n:"Andorra",r:"Europe"},
-    {c:"AT",n:"Austria",r:"Europe"},
-    {c:"BY",n:"Belarus",r:"Europe"},
-    {c:"BE",n:"Belgium",r:"Europe"},
-    {c:"BA",n:"Bosnia and Herzegovina",r:"Europe"},
-    {c:"BG",n:"Bulgaria",r:"Europe"},
-    {c:"HR",n:"Croatia",r:"Europe",note:"Checkerboard shield is the giveaway."},
-    {c:"CY",n:"Cyprus",r:"Europe",note:"Shows a copper map of the island itself."},
-    {c:"CZ",n:"Czechia",r:"Europe",note:"Like Poland's colors, but with a blue wedge."},
-    {c:"DK",n:"Denmark",r:"Europe",note:"Oldest continuously used national flag design."},
-    {c:"EE",n:"Estonia",r:"Europe"},
-    {c:"FI",n:"Finland",r:"Europe"},
-    {c:"FR",n:"France",r:"Europe"},
-    {c:"DE",n:"Germany",r:"Europe"},
-    {c:"GR",n:"Greece",r:"Europe"},
-    {c:"HU",n:"Hungary",r:"Europe"},
-    {c:"IS",n:"Iceland",r:"Europe"},
-    {c:"IE",n:"Ireland",r:"Europe",note:"Mirror image of Ivory Coast's colors."},
-    {c:"IT",n:"Italy",r:"Europe"},
-    {c:"XK",n:"Kosovo",r:"Europe",note:"Newest design language: map silhouette + stars."},
-    {c:"LV",n:"Latvia",r:"Europe"},
-    {c:"LI",n:"Liechtenstein",r:"Europe",note:"Added the crown after a 1936 mix-up with Haiti's flag."},
-    {c:"LT",n:"Lithuania",r:"Europe"},
-    {c:"LU",n:"Luxembourg",r:"Europe",note:"Near-identical to the Netherlands, just lighter blue and wider."},
-    {c:"MT",n:"Malta",r:"Europe"},
-    {c:"MD",n:"Moldova",r:"Europe"},
-    {c:"MC",n:"Monaco",r:"Europe",note:"Red over white — same colors as Indonesia and Poland, reversed."},
-    {c:"ME",n:"Montenegro",r:"Europe"},
-    {c:"NL",n:"Netherlands",r:"Europe"},
-    {c:"MK",n:"North Macedonia",r:"Europe"},
-    {c:"NO",n:"Norway",r:"Europe"},
-    {c:"PL",n:"Poland",r:"Europe",note:"White over red — opposite of Monaco/Indonesia."},
-    {c:"PT",n:"Portugal",r:"Europe"},
-    {c:"RO",n:"Romania",r:"Europe",note:"Near-identical to Chad — only the shade of blue differs."},
-    {c:"RU",n:"Russia",r:"Europe"},
-    {c:"SM",n:"San Marino",r:"Europe"},
-    {c:"RS",n:"Serbia",r:"Europe"},
-    {c:"SK",n:"Slovakia",r:"Europe"},
-    {c:"SI",n:"Slovenia",r:"Europe"},
-    {c:"ES",n:"Spain",r:"Europe"},
-    {c:"SE",n:"Sweden",r:"Europe"},
-    {c:"CH",n:"Switzerland",r:"Europe",note:"One of only two square national flags."},
-    {c:"UA",n:"Ukraine",r:"Europe"},
-    {c:"GB",n:"United Kingdom",r:"Europe"},
-    {c:"VA",n:"Vatican City",r:"Europe",note:"The other square flag."},
+    {c:"AL",n:"Albania",r:"Europe",cap:"Tirana",fact:"Home to 173,000 bunkers built during communist rule — one for every 28 people."},
+    {c:"AD",n:"Andorra",r:"Europe",cap:"Andorra la Vella",fact:"One of only two countries to have no airports and no navy — landlocked and tiny."},
+    {c:"AT",n:"Austria",r:"Europe",cap:"Vienna",fact:"The croissant was invented in Vienna, not France."},
+    {c:"BY",n:"Belarus",r:"Europe",cap:"Minsk",fact:"The last country in Europe still using the KGB as its official security agency."},
+    {c:"BE",n:"Belgium",r:"Europe",cap:"Brussels",fact:"Produces over 220,000 tonnes of chocolate per year — more than any other country."},
+    {c:"BA",n:"Bosnia and Herzegovina",r:"Europe",cap:"Sarajevo",fact:"Sarajevo hosted the 1984 Winter Olympics — its bobsled track still stands as a ruin."},
+    {c:"BG",n:"Bulgaria",r:"Europe",cap:"Sofia",fact:"Nodding the head means 'no' and shaking it means 'yes' — opposite of most countries."},
+    {c:"HR",n:"Croatia",r:"Europe",cap:"Zagreb",note:"Checkerboard shield is the giveaway.",fact:"The necktie (cravat) was invented in Croatia and named after Croatian soldiers."},
+    {c:"CY",n:"Cyprus",r:"Europe",cap:"Nicosia",note:"Shows a copper map of the island itself.",fact:"Nicosia is the last divided capital city in the world, split between Greek and Turkish sides."},
+    {c:"CZ",n:"Czechia",r:"Europe",cap:"Prague",note:"Like Poland's colors, but with a blue wedge.",fact:"Beer consumption per capita is the highest in the world — about 142 litres per person per year."},
+    {c:"DK",n:"Denmark",r:"Europe",cap:"Copenhagen",note:"Oldest continuously used national flag design.",fact:"The Danes invented Lego, which now produces more tires than any car manufacturer."},
+    {c:"EE",n:"Estonia",r:"Europe",cap:"Tallinn",fact:"Estonia was the first country in the world to declare internet access a legal right (2000)."},
+    {c:"FI",n:"Finland",r:"Europe",cap:"Helsinki",fact:"Finland has more saunas than cars — roughly 3.3 million saunas for 5.5 million people."},
+    {c:"FR",n:"France",r:"Europe",cap:"Paris",fact:"France is the most visited country in the world, receiving around 90 million tourists per year."},
+    {c:"DE",n:"Germany",r:"Europe",cap:"Berlin",fact:"Germany has over 1,500 different types of beer and about 1,300 breweries."},
+    {c:"GR",n:"Greece",r:"Europe",cap:"Athens",fact:"Greece has more archaeological museums than any other country in the world."},
+    {c:"HU",n:"Hungary",r:"Europe",cap:"Budapest",fact:"Hungarian inventors created the Rubik's Cube, the ballpoint pen, and the hologram."},
+    {c:"IS",n:"Iceland",r:"Europe",cap:"Reykjavik",fact:"Iceland has no army and has been ranked the most peaceful country in the world 14 times."},
+    {c:"IE",n:"Ireland",r:"Europe",cap:"Dublin",note:"Mirror image of Ivory Coast's colors.",fact:"Halloween originated from the ancient Celtic festival of Samhain, practiced in Ireland."},
+    {c:"IT",n:"Italy",r:"Europe",cap:"Rome",fact:"Italy has more UNESCO World Heritage Sites than any other country — 58 in total."},
+    {c:"XK",n:"Kosovo",r:"Europe",cap:"Pristina",note:"Newest design language: map silhouette + stars.",fact:"Kosovo declared independence in 2008 and is one of the world's youngest countries."},
+    {c:"LV",n:"Latvia",r:"Europe",cap:"Riga",fact:"Latvia's flag design (dark red–white–dark red) dates to 1280, making it one of the oldest."},
+    {c:"LI",n:"Liechtenstein",r:"Europe",cap:"Vaduz",note:"Added the crown after a 1936 mix-up with Haiti's flag.",fact:"Liechtenstein and Uzbekistan are the world's only double-landlocked countries."},
+    {c:"LT",n:"Lithuania",r:"Europe",cap:"Vilnius",fact:"Lithuania was the last European country to officially adopt Christianity, in 1387."},
+    {c:"LU",n:"Luxembourg",r:"Europe",cap:"Luxembourg City",note:"Near-identical to the Netherlands, just lighter blue and wider.",fact:"Luxembourg has the highest GDP per capita in the world."},
+    {c:"MT",n:"Malta",r:"Europe",cap:"Valletta",fact:"Valletta is the smallest national capital in the EU by area."},
+    {c:"MD",n:"Moldova",r:"Europe",cap:"Chișinău",fact:"Moldova produces more wine per capita than almost any other country on Earth."},
+    {c:"MC",n:"Monaco",r:"Europe",cap:"Monaco",note:"Red over white — same colors as Indonesia and Poland, reversed.",fact:"Monaco is the world's most densely populated country and has no income tax."},
+    {c:"ME",n:"Montenegro",r:"Europe",cap:"Podgorica",fact:"The name Montenegro means 'Black Mountain' in Venetian Italian."},
+    {c:"NL",n:"Netherlands",r:"Europe",cap:"Amsterdam",fact:"The Netherlands exports the most flowers in the world — about 75% of the global total."},
+    {c:"MK",n:"North Macedonia",r:"Europe",cap:"Skopje",fact:"The ancient city of Stobi, located in North Macedonia, was once a thriving Roman city."},
+    {c:"NO",n:"Norway",r:"Europe",cap:"Oslo",fact:"Norway has the world's longest road tunnel — the Lærdal Tunnel at 24.5 km."},
+    {c:"PL",n:"Poland",r:"Europe",cap:"Warsaw",note:"White over red — opposite of Monaco/Indonesia.",fact:"Poland has produced more Nobel laureates per capita in literature than most countries."},
+    {c:"PT",n:"Portugal",r:"Europe",cap:"Lisbon",fact:"Portuguese is the official language of 9 countries across 4 continents."},
+    {c:"RO",n:"Romania",r:"Europe",cap:"Bucharest",note:"Near-identical to Chad — only the shade of blue differs.",fact:"Romania is the world's largest IT outsourcing hub per capita in Eastern Europe."},
+    {c:"RU",n:"Russia",r:"Europe",cap:"Moscow",fact:"Russia spans 11 time zones — the most of any country in the world."},
+    {c:"SM",n:"San Marino",r:"Europe",cap:"San Marino",fact:"San Marino claims to be the world's oldest republic, founded in 301 AD."},
+    {c:"RS",n:"Serbia",r:"Europe",cap:"Belgrade",fact:"Serbia is the world's second largest producer of raspberries."},
+    {c:"SK",n:"Slovakia",r:"Europe",cap:"Bratislava",fact:"Bratislava is one of the few capitals in the world that borders two countries: Austria and Hungary."},
+    {c:"SI",n:"Slovenia",r:"Europe",cap:"Ljubljana",fact:"Over 60% of Slovenia is covered by forest, making it one of Europe's greenest countries."},
+    {c:"ES",n:"Spain",r:"Europe",cap:"Madrid",fact:"Spain is home to La Tomatina, an annual festival where participants throw tomatoes at each other."},
+    {c:"SE",n:"Sweden",r:"Europe",cap:"Stockholm",fact:"Sweden invented the three-point seatbelt and made the patent free for all carmakers to use."},
+    {c:"CH",n:"Switzerland",r:"Europe",cap:"Bern",note:"One of only two square national flags.",fact:"Switzerland has not been involved in an armed conflict since 1815."},
+    {c:"UA",n:"Ukraine",r:"Europe",cap:"Kyiv",fact:"Ukraine is the largest country entirely within Europe by land area."},
+    {c:"GB",n:"United Kingdom",r:"Europe",cap:"London",fact:"The UK invented the World Wide Web, the telephone, and the steam engine."},
+    {c:"VA",n:"Vatican City",r:"Europe",cap:"Vatican City",note:"The other square flag.",fact:"Vatican City is the smallest country in the world at just 0.44 km²."},
 
     // Middle East
-    {c:"BH",n:"Bahrain",r:"Middle East"},
-    {c:"IQ",n:"Iraq",r:"Middle East"},
-    {c:"IR",n:"Iran",r:"Middle East"},
-    {c:"IL",n:"Israel",r:"Middle East"},
-    {c:"JO",n:"Jordan",r:"Middle East"},
-    {c:"KW",n:"Kuwait",r:"Middle East"},
-    {c:"LB",n:"Lebanon",r:"Middle East",note:"Cedar tree, centered."},
-    {c:"OM",n:"Oman",r:"Middle East"},
-    {c:"PS",n:"Palestine",r:"Middle East"},
-    {c:"QA",n:"Qatar",r:"Middle East",note:"Maroon, not red — with a serrated edge."},
-    {c:"SA",n:"Saudi Arabia",r:"Middle East",note:"Script and sword; never flown at half-mast since it bears sacred text."},
-    {c:"SY",n:"Syria",r:"Middle East"},
-    {c:"TR",n:"Turkey",r:"Middle East"},
-    {c:"AE",n:"United Arab Emirates",r:"Middle East"},
-    {c:"YE",n:"Yemen",r:"Middle East"},
+    {c:"BH",n:"Bahrain",r:"Middle East",cap:"Manama",fact:"Bahrain was the first Gulf state to discover oil, in 1932."},
+    {c:"IQ",n:"Iraq",r:"Middle East",cap:"Baghdad",fact:"Iraq is home to Mesopotamia, often called the 'Cradle of Civilization'."},
+    {c:"IR",n:"Iran",r:"Middle East",cap:"Tehran",fact:"Iran is home to one of the world's oldest civilizations, dating back 7,000 years."},
+    {c:"IL",n:"Israel",r:"Middle East",cap:"Jerusalem",fact:"Israel has more museums per capita than any other country."},
+    {c:"JO",n:"Jordan",r:"Middle East",cap:"Amman",fact:"The Dead Sea, bordering Jordan, is the lowest point on Earth at 430 m below sea level."},
+    {c:"KW",n:"Kuwait",r:"Middle East",cap:"Kuwait City",fact:"Kuwait has the world's sixth-largest proven oil reserves."},
+    {c:"LB",n:"Lebanon",r:"Middle East",cap:"Beirut",note:"Cedar tree, centered.",fact:"Lebanon was once known as the 'Paris of the Middle East' for its cosmopolitan culture."},
+    {c:"OM",n:"Oman",r:"Middle East",cap:"Muscat",fact:"Oman is one of the oldest independent states in the Arab world, unified in 1749."},
+    {c:"PS",n:"Palestine",r:"Middle East",cap:"Ramallah",fact:"Palestine is home to Jericho, one of the world's oldest continuously inhabited cities."},
+    {c:"QA",n:"Qatar",r:"Middle East",cap:"Doha",note:"Maroon, not red — with a serrated edge.",fact:"Qatar has the highest GDP per capita in the Arab world."},
+    {c:"SA",n:"Saudi Arabia",r:"Middle East",cap:"Riyadh",note:"Script and sword; never flown at half-mast since it bears sacred text.",fact:"Saudi Arabia is the only country in the world to have its holy text on the national flag."},
+    {c:"SY",n:"Syria",r:"Middle East",cap:"Damascus",fact:"Damascus is one of the oldest continuously inhabited cities in the world, over 11,000 years old."},
+    {c:"TR",n:"Turkey",r:"Middle East",cap:"Ankara",fact:"Turkey is the world's largest producer of hazelnuts, producing about 75% of the world's supply."},
+    {c:"AE",n:"United Arab Emirates",r:"Middle East",cap:"Abu Dhabi",fact:"The UAE is home to the world's tallest building, the Burj Khalifa at 828 metres."},
+    {c:"YE",n:"Yemen",r:"Middle East",cap:"Sana'a",fact:"Sana'a is one of the world's highest capital cities, located 2,300 metres above sea level."},
 
     // Asia
-    {c:"AF",n:"Afghanistan",r:"Asia"},
-    {c:"AM",n:"Armenia",r:"Asia"},
-    {c:"AZ",n:"Azerbaijan",r:"Asia"},
-    {c:"BD",n:"Bangladesh",r:"Asia",note:"Red disc sits slightly off-center."},
-    {c:"BT",n:"Bhutan",r:"Asia",note:"A dragon, diagonally split field."},
-    {c:"BN",n:"Brunei",r:"Asia"},
-    {c:"KH",n:"Cambodia",r:"Asia",note:"Angkor Wat silhouette, centered."},
-    {c:"CN",n:"China",r:"Asia"},
-    {c:"GE",n:"Georgia",r:"Asia",note:"Five small red crosses around one large one."},
-    {c:"IN",n:"India",r:"Asia",note:"Ashoka Chakra — a 24-spoke wheel."},
-    {c:"ID",n:"Indonesia",r:"Asia",note:"Red over white — same as Monaco, opposite of Poland."},
-    {c:"JP",n:"Japan",r:"Asia"},
-    {c:"KZ",n:"Kazakhstan",r:"Asia"},
-    {c:"KP",n:"North Korea",r:"Asia"},
-    {c:"KR",n:"South Korea",r:"Asia",note:"Taegeuk circle plus four trigrams."},
-    {c:"KG",n:"Kyrgyzstan",r:"Asia",note:"A 40-ray sun over a tunduk (yurt crown)."},
-    {c:"LA",n:"Laos",r:"Asia"},
-    {c:"MY",n:"Malaysia",r:"Asia"},
-    {c:"MV",n:"Maldives",r:"Asia"},
-    {c:"MN",n:"Mongolia",r:"Asia"},
-    {c:"MM",n:"Myanmar",r:"Asia"},
-    {c:"NP",n:"Nepal",r:"Asia",note:"The only non-rectangular national flag — two stacked pennants."},
-    {c:"PK",n:"Pakistan",r:"Asia"},
-    {c:"PH",n:"Philippines",r:"Asia"},
-    {c:"SG",n:"Singapore",r:"Asia"},
-    {c:"LK",n:"Sri Lanka",r:"Asia",note:"A lion holding a sword."},
-    {c:"TW",n:"Taiwan",r:"Asia"},
-    {c:"TJ",n:"Tajikistan",r:"Asia"},
-    {c:"TH",n:"Thailand",r:"Asia"},
-    {c:"TL",n:"Timor-Leste",r:"Asia"},
-    {c:"TM",n:"Turkmenistan",r:"Asia",note:"A carpet-rug pattern stripe near the hoist."},
-    {c:"UZ",n:"Uzbekistan",r:"Asia"},
-    {c:"VN",n:"Vietnam",r:"Asia"},
+    {c:"AF",n:"Afghanistan",r:"Asia",cap:"Kabul",fact:"Afghanistan is the world's largest producer of opium, accounting for over 80% of global supply."},
+    {c:"AM",n:"Armenia",r:"Asia",cap:"Yerevan",fact:"Armenia was the first country in the world to adopt Christianity as its state religion, in 301 AD."},
+    {c:"AZ",n:"Azerbaijan",r:"Asia",cap:"Baku",fact:"Azerbaijan is known as the 'Land of Fire' — it has natural gas vents that have burned for centuries."},
+    {c:"BD",n:"Bangladesh",r:"Asia",cap:"Dhaka",note:"Red disc sits slightly off-center.",fact:"Bangladesh is the most densely populated large country in the world."},
+    {c:"BT",n:"Bhutan",r:"Asia",cap:"Thimphu",note:"A dragon, diagonally split field.",fact:"Bhutan is the only country that measures success by Gross National Happiness rather than GDP."},
+    {c:"BN",n:"Brunei",r:"Asia",cap:"Bandar Seri Begawan",fact:"Brunei's Sultan has been one of the world's longest-reigning monarchs since 1967."},
+    {c:"KH",n:"Cambodia",r:"Asia",cap:"Phnom Penh",note:"Angkor Wat silhouette, centered.",fact:"Angkor Wat is the largest religious monument in the world, covering 162.6 hectares."},
+    {c:"CN",n:"China",r:"Asia",cap:"Beijing",fact:"China is home to the world's largest canal, the Grand Canal, stretching over 1,776 km."},
+    {c:"GE",n:"Georgia",r:"Asia",cap:"Tbilisi",note:"Five small red crosses around one large one.",fact:"Georgia is one of the world's oldest wine-producing regions, with 8,000 years of history."},
+    {c:"IN",n:"India",r:"Asia",cap:"New Delhi",note:"Ashoka Chakra — a 24-spoke wheel.",fact:"India is the world's largest democracy and has the most post offices of any country."},
+    {c:"ID",n:"Indonesia",r:"Asia",cap:"Jakarta",note:"Red over white — same as Monaco, opposite of Poland.",fact:"Indonesia has the world's largest number of active volcanoes — 127 in total."},
+    {c:"JP",n:"Japan",r:"Asia",cap:"Tokyo",fact:"Japan has the world's oldest company, Kongō Gumi, a construction firm founded in 578 AD."},
+    {c:"KZ",n:"Kazakhstan",r:"Asia",cap:"Astana",fact:"Kazakhstan is the world's largest landlocked country, about the size of Western Europe."},
+    {c:"KP",n:"North Korea",r:"Asia",cap:"Pyongyang",fact:"North Korea operates on its own calendar system, called the Juche calendar, starting from 1912."},
+    {c:"KR",n:"South Korea",r:"Asia",cap:"Seoul",note:"Taegeuk circle plus four trigrams.",fact:"South Korea has the world's fastest average internet speed and highest smartphone ownership rate."},
+    {c:"KG",n:"Kyrgyzstan",r:"Asia",cap:"Bishkek",note:"A 40-ray sun over a tunduk (yurt crown).",fact:"Kyrgyzstan has one of the world's largest walnut forests in the Fergana Valley."},
+    {c:"LA",n:"Laos",r:"Asia",cap:"Vientiane",fact:"Laos is the most bombed country per capita in history, due to the Vietnam War era."},
+    {c:"MY",n:"Malaysia",r:"Asia",cap:"Kuala Lumpur",fact:"Malaysia is the world's second-largest producer of palm oil."},
+    {c:"MV",n:"Maldives",r:"Asia",cap:"Malé",fact:"The Maldives is the world's lowest-lying country, with a maximum elevation of just 2.4 metres."},
+    {c:"MN",n:"Mongolia",r:"Asia",cap:"Ulaanbaatar",fact:"Mongolia has the lowest population density of any country in the world."},
+    {c:"MM",n:"Myanmar",r:"Asia",cap:"Naypyidaw",fact:"Myanmar has a purpose-built capital city, Naypyidaw, constructed in the jungle starting in 2002."},
+    {c:"NP",n:"Nepal",r:"Asia",cap:"Kathmandu",note:"The only non-rectangular national flag — two stacked pennants.",fact:"Nepal is home to 8 of the world's 10 tallest mountains, including Mount Everest."},
+    {c:"PK",n:"Pakistan",r:"Asia",cap:"Islamabad",fact:"Pakistan is home to the second-highest mountain in the world, K2, at 8,611 metres."},
+    {c:"PH",n:"Philippines",r:"Asia",cap:"Manila",fact:"The Philippines is an archipelago of over 7,600 islands."},
+    {c:"SG",n:"Singapore",r:"Asia",cap:"Singapore",fact:"Singapore is one of only three city-states in the world and has no natural freshwater lakes."},
+    {c:"LK",n:"Sri Lanka",r:"Asia",cap:"Sri Jayawardenepura Kotte",note:"A lion holding a sword.",fact:"Sri Lanka is the world's leading exporter of Ceylon tea, producing some since the 1860s."},
+    {c:"TW",n:"Taiwan",r:"Asia",cap:"Taipei",fact:"Taiwan produces over 90% of the world's most advanced semiconductors."},
+    {c:"TJ",n:"Tajikistan",r:"Asia",cap:"Dushanbe",fact:"Over 90% of Tajikistan's territory is covered by mountains."},
+    {c:"TH",n:"Thailand",r:"Asia",cap:"Bangkok",fact:"Thailand is the world's largest exporter of natural rubber."},
+    {c:"TL",n:"Timor-Leste",r:"Asia",cap:"Dili",fact:"Timor-Leste is one of the world's youngest nations, gaining independence in 2002."},
+    {c:"TM",n:"Turkmenistan",r:"Asia",cap:"Ashgabat",note:"A carpet-rug pattern stripe near the hoist.",fact:"Turkmenistan has the world's fourth-largest reserves of natural gas."},
+    {c:"UZ",n:"Uzbekistan",r:"Asia",cap:"Tashkent",fact:"Uzbekistan is one of only two double-landlocked countries — surrounded by other landlocked nations."},
+    {c:"VN",n:"Vietnam",r:"Asia",cap:"Hanoi",fact:"Vietnam is the world's largest exporter of cashew nuts and second-largest of coffee."},
 
     // Africa
-    {c:"DZ",n:"Algeria",r:"Africa"},
-    {c:"AO",n:"Angola",r:"Africa"},
-    {c:"BJ",n:"Benin",r:"Africa"},
-    {c:"BW",n:"Botswana",r:"Africa"},
-    {c:"BF",n:"Burkina Faso",r:"Africa"},
-    {c:"BI",n:"Burundi",r:"Africa"},
-    {c:"CV",n:"Cabo Verde",r:"Africa"},
-    {c:"CM",n:"Cameroon",r:"Africa"},
-    {c:"CF",n:"Central African Republic",r:"Africa"},
-    {c:"TD",n:"Chad",r:"Africa",note:"Near-identical to Romania."},
-    {c:"KM",n:"Comoros",r:"Africa"},
-    {c:"CG",n:"Congo, Republic of",r:"Africa"},
-    {c:"CD",n:"DR Congo",r:"Africa"},
-    {c:"DJ",n:"Djibouti",r:"Africa"},
-    {c:"EG",n:"Egypt",r:"Africa",note:"The golden Eagle of Saladin, centered."},
-    {c:"GQ",n:"Equatorial Guinea",r:"Africa"},
-    {c:"ER",n:"Eritrea",r:"Africa"},
-    {c:"SZ",n:"Eswatini",r:"Africa",note:"A warrior's shield and spears."},
-    {c:"ET",n:"Ethiopia",r:"Africa",note:"The original source of Pan-African green/yellow/red."},
-    {c:"GA",n:"Gabon",r:"Africa"},
-    {c:"GM",n:"Gambia",r:"Africa"},
-    {c:"GH",n:"Ghana",r:"Africa",note:"A black star — first sub-Saharan country to use the Pan-African palette."},
-    {c:"GN",n:"Guinea",r:"Africa"},
-    {c:"GW",n:"Guinea-Bissau",r:"Africa"},
-    {c:"CI",n:"Ivory Coast",r:"Africa",note:"Mirror image of Ireland's colors."},
-    {c:"KE",n:"Kenya",r:"Africa",note:"A Maasai shield and spears over the stripes."},
-    {c:"LS",n:"Lesotho",r:"Africa",note:"A mokorotlo (woven hat), centered."},
-    {c:"LR",n:"Liberia",r:"Africa",note:"Looks like a single-star, single-stripe US flag."},
-    {c:"LY",n:"Libya",r:"Africa"},
-    {c:"MG",n:"Madagascar",r:"Africa"},
-    {c:"MW",n:"Malawi",r:"Africa"},
-    {c:"ML",n:"Mali",r:"Africa"},
-    {c:"MR",n:"Mauritania",r:"Africa"},
-    {c:"MU",n:"Mauritius",r:"Africa"},
-    {c:"MA",n:"Morocco",r:"Africa",note:"A green pentagram on red."},
-    {c:"MZ",n:"Mozambique",r:"Africa",note:"An AK-47 crossed with a hoe, over an open book."},
-    {c:"NA",n:"Namibia",r:"Africa"},
-    {c:"NE",n:"Niger",r:"Africa"},
-    {c:"NG",n:"Nigeria",r:"Africa"},
-    {c:"RW",n:"Rwanda",r:"Africa"},
-    {c:"ST",n:"Sao Tome and Principe",r:"Africa"},
-    {c:"SN",n:"Senegal",r:"Africa",note:"A green star, centered."},
-    {c:"SC",n:"Seychelles",r:"Africa"},
-    {c:"SL",n:"Sierra Leone",r:"Africa"},
-    {c:"SO",n:"Somalia",r:"Africa",note:"Sky blue field, single white star."},
-    {c:"ZA",n:"South Africa",r:"Africa",note:"Six colors in a Y-shape — the most colors on any flag."},
-    {c:"SS",n:"South Sudan",r:"Africa"},
-    {c:"SD",n:"Sudan",r:"Africa"},
-    {c:"TZ",n:"Tanzania",r:"Africa"},
-    {c:"TG",n:"Togo",r:"Africa"},
-    {c:"TN",n:"Tunisia",r:"Africa",note:"Red crescent and star, like Turkey but on a red disc."},
-    {c:"UG",n:"Uganda",r:"Africa",note:"A grey crane, centered."},
-    {c:"ZM",n:"Zambia",r:"Africa"},
-    {c:"ZW",n:"Zimbabwe",r:"Africa"},
+    {c:"DZ",n:"Algeria",r:"Africa",cap:"Algiers",fact:"Algeria is the largest country in Africa and the tenth-largest in the world by area."},
+    {c:"AO",n:"Angola",r:"Africa",cap:"Luanda",fact:"Angola is one of the world's top producers of diamonds and oil."},
+    {c:"BJ",n:"Benin",r:"Africa",cap:"Porto-Novo",fact:"Benin is considered the birthplace of the Vodun (Voodoo) religion."},
+    {c:"BW",n:"Botswana",r:"Africa",cap:"Gaborone",fact:"Botswana transformed from one of Africa's poorest nations to a middle-income country within decades thanks to diamonds."},
+    {c:"BF",n:"Burkina Faso",r:"Africa",cap:"Ouagadougou",fact:"Ouagadougou has one of the longest capital city names in the world."},
+    {c:"BI",n:"Burundi",r:"Africa",cap:"Gitega",fact:"Burundi is one of the few African nations where drumming is considered a sacred art form."},
+    {c:"CV",n:"Cabo Verde",r:"Africa",cap:"Praia",fact:"Cabo Verde was uninhabited when Portuguese explorers arrived in 1456."},
+    {c:"CM",n:"Cameroon",r:"Africa",cap:"Yaoundé",fact:"Cameroon is called 'Africa in miniature' because it contains nearly every climate zone found on the continent."},
+    {c:"CF",n:"Central African Republic",r:"Africa",cap:"Bangui",fact:"The CAR has significant deposits of uranium, gold, and diamonds."},
+    {c:"TD",n:"Chad",r:"Africa",cap:"N'Djamena",note:"Near-identical to Romania.",fact:"Chad is home to Lake Chad, which has shrunk by 90% since the 1960s due to climate change."},
+    {c:"KM",n:"Comoros",r:"Africa",cap:"Moroni",fact:"Comoros is the world's largest producer of ylang-ylang, used in perfume manufacturing."},
+    {c:"CG",n:"Congo, Republic of",r:"Africa",cap:"Brazzaville",fact:"Brazzaville and Kinshasa are the world's closest capital cities facing each other across a river."},
+    {c:"CD",n:"DR Congo",r:"Africa",cap:"Kinshasa",fact:"The Congo River is the deepest river in the world, reaching depths of over 220 metres."},
+    {c:"DJ",n:"Djibouti",r:"Africa",cap:"Djibouti City",fact:"Djibouti hosts military bases from more foreign nations than almost any other country."},
+    {c:"EG",n:"Egypt",r:"Africa",cap:"Cairo",note:"The golden Eagle of Saladin, centered.",fact:"Egypt is home to the only remaining Wonder of the Ancient World — the Great Pyramid of Giza."},
+    {c:"GQ",n:"Equatorial Guinea",r:"Africa",cap:"Malabo",fact:"Equatorial Guinea is the only country in Africa where Spanish is an official language."},
+    {c:"ER",n:"Eritrea",r:"Africa",cap:"Asmara",fact:"Asmara has one of the world's best-preserved collections of modernist Italian colonial architecture."},
+    {c:"SZ",n:"Eswatini",r:"Africa",cap:"Mbabane",note:"A warrior's shield and spears.",fact:"Eswatini (formerly Swaziland) is one of the world's last absolute monarchies."},
+    {c:"ET",n:"Ethiopia",r:"Africa",cap:"Addis Ababa",note:"The original source of Pan-African green/yellow/red.",fact:"Ethiopia is the only African country that was never colonized, and it follows its own calendar."},
+    {c:"GA",n:"Gabon",r:"Africa",cap:"Libreville",fact:"About 85% of Gabon is covered by tropical rainforest."},
+    {c:"GM",n:"Gambia",r:"Africa",cap:"Banjul",fact:"Gambia is the smallest country on the African mainland, completely surrounded by Senegal except its coast."},
+    {c:"GH",n:"Ghana",r:"Africa",cap:"Accra",note:"A black star — first sub-Saharan country to use the Pan-African palette.",fact:"Ghana was the first sub-Saharan African country to gain independence from European colonial rule, in 1957."},
+    {c:"GN",n:"Guinea",r:"Africa",cap:"Conakry",fact:"Guinea holds over 25% of the world's bauxite reserves (used to make aluminum)."},
+    {c:"GW",n:"Guinea-Bissau",r:"Africa",cap:"Bissau",fact:"Guinea-Bissau is one of the world's top exporters of cashew nuts."},
+    {c:"CI",n:"Ivory Coast",r:"Africa",cap:"Yamoussoukro",note:"Mirror image of Ireland's colors.",fact:"Ivory Coast produces about 40% of the world's cocoa supply."},
+    {c:"KE",n:"Kenya",r:"Africa",cap:"Nairobi",note:"A Maasai shield and spears over the stripes.",fact:"Kenya's Great Rift Valley is considered the birthplace of humankind."},
+    {c:"LS",n:"Lesotho",r:"Africa",cap:"Maseru",note:"A mokorotlo (woven hat), centered.",fact:"Lesotho is one of only three countries in the world completely surrounded by another single country (South Africa)."},
+    {c:"LR",n:"Liberia",r:"Africa",cap:"Monrovia",note:"Looks like a single-star, single-stripe US flag.",fact:"Liberia was founded in 1847 by freed American slaves and is Africa's oldest republic."},
+    {c:"LY",n:"Libya",r:"Africa",cap:"Tripoli",fact:"Libya has the largest proven oil reserves in Africa."},
+    {c:"MG",n:"Madagascar",r:"Africa",cap:"Antananarivo",fact:"Madagascar is home to over 90% of its wildlife found nowhere else on Earth."},
+    {c:"MW",n:"Malawi",r:"Africa",cap:"Lilongwe",fact:"Lake Malawi contains more species of fish than any other lake in the world."},
+    {c:"ML",n:"Mali",r:"Africa",cap:"Bamako",fact:"Mali was home to the Mali Empire, one of the wealthiest in history, controlling much of the gold trade."},
+    {c:"MR",n:"Mauritania",r:"Africa",cap:"Nouakchott",fact:"Mauritania was the last country in the world to officially abolish slavery, in 1981."},
+    {c:"MU",n:"Mauritius",r:"Africa",cap:"Port Louis",fact:"Mauritius is one of only two countries to have had a Dodo bird — now famously extinct."},
+    {c:"MA",n:"Morocco",r:"Africa",cap:"Rabat",note:"A green pentagram on red.",fact:"Morocco is home to the world's oldest university still in operation, the University of al-Qarawiyyin (859 AD)."},
+    {c:"MZ",n:"Mozambique",r:"Africa",cap:"Maputo",note:"An AK-47 crossed with a hoe, over an open book.",fact:"Mozambique's flag is the only national flag to depict a modern assault rifle (AK-47)."},
+    {c:"NA",n:"Namibia",r:"Africa",cap:"Windhoek",fact:"Namibia has the world's oldest desert, the Namib, which is over 55 million years old."},
+    {c:"NE",n:"Niger",r:"Africa",cap:"Niamey",fact:"Niger is one of the hottest countries in the world and one of the largest by land area in Africa."},
+    {c:"NG",n:"Nigeria",r:"Africa",cap:"Abuja",fact:"Nigeria is Africa's most populous country and has the continent's largest economy."},
+    {c:"RW",n:"Rwanda",r:"Africa",cap:"Kigali",fact:"Rwanda has the highest percentage of women in parliament of any country in the world."},
+    {c:"ST",n:"Sao Tome and Principe",r:"Africa",cap:"São Tomé",fact:"Sao Tome and Principe was the first sub-Saharan African country to democratize, in 1991."},
+    {c:"SN",n:"Senegal",r:"Africa",cap:"Dakar",note:"A green star, centered.",fact:"The Paris-Dakar Rally was named after Dakar — once the finish line of the famous race."},
+    {c:"SC",n:"Seychelles",r:"Africa",cap:"Victoria",fact:"Seychelles is home to the world's largest seed — the Coco de Mer, weighing up to 25 kg."},
+    {c:"SL",n:"Sierra Leone",r:"Africa",cap:"Freetown",fact:"Sierra Leone's Freetown was founded as a home for freed slaves in 1792."},
+    {c:"SO",n:"Somalia",r:"Africa",cap:"Mogadishu",note:"Sky blue field, single white star.",fact:"Somalia has the longest coastline of any country in mainland Africa."},
+    {c:"ZA",n:"South Africa",r:"Africa",cap:"Pretoria",note:"Six colors in a Y-shape — the most colors on any flag.",fact:"South Africa is the only country to have voluntarily dismantled its nuclear weapons program."},
+    {c:"SS",n:"South Sudan",r:"Africa",cap:"Juba",fact:"South Sudan is the world's newest country, gaining independence from Sudan in 2011."},
+    {c:"SD",n:"Sudan",r:"Africa",cap:"Khartoum",fact:"Sudan has more ancient pyramids than Egypt — over 200 in total."},
+    {c:"TZ",n:"Tanzania",r:"Africa",cap:"Dodoma",fact:"Tanzania is home to Mount Kilimanjaro, the highest mountain in Africa at 5,895 m."},
+    {c:"TG",n:"Togo",r:"Africa",cap:"Lomé",fact:"Lomé was the first sub-Saharan capital city to be reached by a trans-African road."},
+    {c:"TN",n:"Tunisia",r:"Africa",cap:"Tunis",note:"Red crescent and star, like Turkey but on a red disc.",fact:"Tunisia's ancient city of Carthage was once Rome's greatest rival."},
+    {c:"UG",n:"Uganda",r:"Africa",cap:"Kampala",note:"A grey crane, centered.",fact:"Uganda is home to half of the world's remaining mountain gorilla population."},
+    {c:"ZM",n:"Zambia",r:"Africa",cap:"Lusaka",fact:"Zambia and Zimbabwe share Victoria Falls, one of the world's largest waterfalls."},
+    {c:"ZW",n:"Zimbabwe",r:"Africa",cap:"Harare",fact:"Zimbabwe has 16 official languages — the most of any country in the world."},
 
     // North America
-    {c:"AG",n:"Antigua and Barbuda",r:"North America"},
-    {c:"BS",n:"Bahamas",r:"North America"},
-    {c:"BB",n:"Barbados",r:"North America"},
-    {c:"BZ",n:"Belize",r:"North America",note:"Most detailed coat of arms of any flag."},
-    {c:"CA",n:"Canada",r:"North America",note:"Maple leaf, centered."},
-    {c:"CR",n:"Costa Rica",r:"North America"},
-    {c:"CU",n:"Cuba",r:"North America",note:"Same layout family as Puerto Rico, colors swapped."},
-    {c:"DM",n:"Dominica",r:"North America",note:"A sisserou parrot, centered."},
-    {c:"DO",n:"Dominican Republic",r:"North America",note:"Only flag with a coat of arms splitting a centered cross."},
-    {c:"SV",n:"El Salvador",r:"North America"},
-    {c:"GD",n:"Grenada",r:"North America"},
-    {c:"GT",n:"Guatemala",r:"North America"},
-    {c:"HT",n:"Haiti",r:"North America"},
-    {c:"HN",n:"Honduras",r:"North America"},
-    {c:"JM",n:"Jamaica",r:"North America",note:"The only national flag with no red, white, or blue."},
-    {c:"MX",n:"Mexico",r:"North America",note:"An eagle eating a snake, centered."},
-    {c:"NI",n:"Nicaragua",r:"North America"},
-    {c:"PA",n:"Panama",r:"North America"},
-    {c:"KN",n:"Saint Kitts and Nevis",r:"North America"},
-    {c:"LC",n:"Saint Lucia",r:"North America"},
-    {c:"VC",n:"Saint Vincent and the Grenadines",r:"North America"},
-    {c:"TT",n:"Trinidad and Tobago",r:"North America"},
-    {c:"US",n:"United States",r:"North America"},
+    {c:"AG",n:"Antigua and Barbuda",r:"North America",cap:"Saint John's",fact:"Antigua has 365 beaches — one for every day of the year."},
+    {c:"BS",n:"Bahamas",r:"North America",cap:"Nassau",fact:"The Bahamas was the site of Christopher Columbus's first landfall in the Americas in 1492."},
+    {c:"BB",n:"Barbados",r:"North America",cap:"Bridgetown",fact:"Barbados is the birthplace of rum, with the first rum distillery dating to the 1620s."},
+    {c:"BZ",n:"Belize",r:"North America",cap:"Belmopan",note:"Most detailed coat of arms of any flag.",fact:"Belize is home to the second-largest barrier reef system in the world."},
+    {c:"CA",n:"Canada",r:"North America",cap:"Ottawa",note:"Maple leaf, centered.",fact:"Canada has the world's longest coastline and more lakes than the rest of the world combined."},
+    {c:"CR",n:"Costa Rica",r:"North America",cap:"San José",fact:"Costa Rica has no army — it abolished its military in 1948 and invested in education instead."},
+    {c:"CU",n:"Cuba",r:"North America",cap:"Havana",note:"Same layout family as Puerto Rico, colors swapped.",fact:"Cuba has one of the highest literacy rates in the world at over 99%."},
+    {c:"DM",n:"Dominica",r:"North America",cap:"Roseau",note:"A sisserou parrot, centered.",fact:"Dominica's sisserou parrot is one of the rarest birds in the world, found only on the island."},
+    {c:"DO",n:"Dominican Republic",r:"North America",cap:"Santo Domingo",note:"Only flag with a coat of arms splitting a centered cross.",fact:"Santo Domingo is the oldest continuously inhabited European settlement in the Americas (1498)."},
+    {c:"SV",n:"El Salvador",r:"North America",cap:"San Salvador",fact:"El Salvador is the smallest and most densely populated country in Central America."},
+    {c:"GD",n:"Grenada",r:"North America",cap:"Saint George's",fact:"Grenada is known as the 'Spice Isle' — it's the world's second-largest producer of nutmeg."},
+    {c:"GT",n:"Guatemala",r:"North America",cap:"Guatemala City",fact:"Guatemala City is the largest city in Central America."},
+    {c:"HT",n:"Haiti",r:"North America",cap:"Port-au-Prince",fact:"Haiti was the first Black republic and the first Caribbean nation to gain independence, in 1804."},
+    {c:"HN",n:"Honduras",r:"North America",cap:"Tegucigalpa",fact:"Honduras has the largest concentration of Mayan ruins in Central America at Copán."},
+    {c:"JM",n:"Jamaica",r:"North America",cap:"Kingston",note:"The only national flag with no red, white, or blue.",fact:"Jamaica is the birthplace of reggae music and the Rastafari movement."},
+    {c:"MX",n:"Mexico",r:"North America",cap:"Mexico City",note:"An eagle eating a snake, centered.",fact:"Mexico City is built on the ruins of the Aztec capital Tenochtitlan, on a lake bed."},
+    {c:"NI",n:"Nicaragua",r:"North America",cap:"Managua",fact:"Nicaragua has more volcanoes than any other Central American country."},
+    {c:"PA",n:"Panama",r:"North America",cap:"Panama City",fact:"The Panama Canal saves ships about 8,000 miles compared to going around South America."},
+    {c:"KN",n:"Saint Kitts and Nevis",r:"North America",cap:"Basseterre",fact:"Saint Kitts and Nevis is the smallest sovereign state in the Americas."},
+    {c:"LC",n:"Saint Lucia",r:"North America",cap:"Castries",fact:"Saint Lucia is the only country in the world named after a woman — Saint Lucy of Syracuse."},
+    {c:"VC",n:"Saint Vincent and the Grenadines",r:"North America",cap:"Kingstown",fact:"Saint Vincent was one of the last Caribbean islands to be colonized due to fierce Carib resistance."},
+    {c:"TT",n:"Trinidad and Tobago",r:"North America",cap:"Port of Spain",fact:"Trinidad and Tobago is the birthplace of the steel pan, the only acoustic instrument invented in the 20th century."},
+    {c:"US",n:"United States",r:"North America",cap:"Washington D.C.",fact:"The US has the world's largest economy by nominal GDP and the third-largest by land area."},
 
     // South America
-    {c:"AR",n:"Argentina",r:"South America",note:"The Sun of May, like Uruguay."},
-    {c:"BO",n:"Bolivia",r:"South America"},
-    {c:"BR",n:"Brazil",r:"South America",note:"A motto banner runs through the globe."},
-    {c:"CL",n:"Chile",r:"South America",note:"Similar layout to the Texas state flag."},
-    {c:"CO",n:"Colombia",r:"South America",note:"Same colors/order as Ecuador and Venezuela — all once Gran Colombia."},
-    {c:"EC",n:"Ecuador",r:"South America",note:"Colombia's stripes plus a coat of arms."},
-    {c:"GY",n:"Guyana",r:"South America"},
-    {c:"PY",n:"Paraguay",r:"South America",note:"The only flag with a different emblem on each side."},
-    {c:"PE",n:"Peru",r:"South America"},
-    {c:"SR",n:"Suriname",r:"South America"},
-    {c:"UY",n:"Uruguay",r:"South America",note:"Also carries the Sun of May."},
-    {c:"VE",n:"Venezuela",r:"South America",note:"Colombia's stripes plus stars and an arc."},
+    {c:"AR",n:"Argentina",r:"South America",cap:"Buenos Aires",note:"The Sun of May, like Uruguay.",fact:"Argentina is the birthplace of tango and the home of the world's widest boulevard, 9 de Julio."},
+    {c:"BO",n:"Bolivia",r:"South America",cap:"Sucre",fact:"Bolivia has two capitals — Sucre (constitutional) and La Paz (seat of government), the world's highest at 3,640 m."},
+    {c:"BR",n:"Brazil",r:"South America",cap:"Brasília",note:"A motto banner runs through the globe.",fact:"Brazil contains about 60% of the Amazon rainforest, the world's largest tropical rainforest."},
+    {c:"CL",n:"Chile",r:"South America",cap:"Santiago",note:"Similar layout to the Texas state flag.",fact:"Chile is the world's longest country from north to south, stretching over 4,300 km."},
+    {c:"CO",n:"Colombia",r:"South America",cap:"Bogotá",note:"Same colors/order as Ecuador and Venezuela — all once Gran Colombia.",fact:"Colombia is the world's largest producer of emeralds and second-largest of cut flowers."},
+    {c:"EC",n:"Ecuador",r:"South America",cap:"Quito",note:"Colombia's stripes plus a coat of arms.",fact:"Ecuador was the first country in the world to grant nature constitutional rights, in 2008."},
+    {c:"GY",n:"Guyana",r:"South America",cap:"Georgetown",fact:"Guyana is the only English-speaking country in South America."},
+    {c:"PY",n:"Paraguay",r:"South America",cap:"Asunción",note:"The only flag with a different emblem on each side.",fact:"After its war with Brazil, Argentina, and Uruguay (1864–70), Paraguay lost 60–70% of its population."},
+    {c:"PE",n:"Peru",r:"South America",cap:"Lima",fact:"Peru is home to Machu Picchu, one of the New Seven Wonders of the World."},
+    {c:"SR",n:"Suriname",r:"South America",cap:"Paramaribo",fact:"Suriname is the smallest sovereign country in South America."},
+    {c:"UY",n:"Uruguay",r:"South America",cap:"Montevideo",note:"Also carries the Sun of May.",fact:"Uruguay was the first country in the world to legalize the production, sale, and consumption of cannabis."},
+    {c:"VE",n:"Venezuela",r:"South America",cap:"Caracas",note:"Colombia's stripes plus stars and an arc.",fact:"Venezuela's Angel Falls is the world's highest uninterrupted waterfall at 979 metres."},
 
     // Oceania
-    {c:"AU",n:"Australia",r:"Oceania",note:"Southern Cross plus a Union Jack."},
-    {c:"FJ",n:"Fiji",r:"Oceania"},
-    {c:"KI",n:"Kiribati",r:"Oceania",note:"A rising sun and a frigatebird."},
-    {c:"MH",n:"Marshall Islands",r:"Oceania"},
-    {c:"FM",n:"Micronesia",r:"Oceania",note:"Four stars, one per state."},
-    {c:"NR",n:"Nauru",r:"Oceania"},
-    {c:"NZ",n:"New Zealand",r:"Oceania",note:"Southern Cross too, but four red-and-white stars on darker blue."},
-    {c:"PW",n:"Palau",r:"Oceania",note:"Off-center disc, like Bangladesh, but gold on blue."},
-    {c:"PG",n:"Papua New Guinea",r:"Oceania",note:"A bird of paradise and the Southern Cross."},
-    {c:"WS",n:"Samoa",r:"Oceania"},
-    {c:"SB",n:"Solomon Islands",r:"Oceania"},
-    {c:"TO",n:"Tonga",r:"Oceania"},
-    {c:"TV",n:"Tuvalu",r:"Oceania",note:"Nine stars for nine islands, plus a Union Jack."},
-    {c:"VU",n:"Vanuatu",r:"Oceania"},
+    {c:"AU",n:"Australia",r:"Oceania",cap:"Canberra",note:"Southern Cross plus a Union Jack.",fact:"Australia is the only continent that is also a single country, and it's the world's largest island."},
+    {c:"FJ",n:"Fiji",r:"Oceania",cap:"Suva",fact:"Fiji was one of the last places in the Pacific to be settled by humans, around 3,500 years ago."},
+    {c:"KI",n:"Kiribati",r:"Oceania",cap:"South Tarawa",note:"A rising sun and a frigatebird.",fact:"Kiribati is the first country to see the New Year, due to its position near the International Date Line."},
+    {c:"MH",n:"Marshall Islands",r:"Oceania",cap:"Majuro",fact:"The Marshall Islands was the site of 67 US nuclear tests between 1946 and 1958."},
+    {c:"FM",n:"Micronesia",r:"Oceania",cap:"Palikir",note:"Four stars, one per state.",fact:"Micronesia is home to Nan Madol, an ancient stone city built on coral islets."},
+    {c:"NR",n:"Nauru",r:"Oceania",cap:"Yaren (de facto)",fact:"Nauru is the world's smallest island nation and the only republic without an official capital."},
+    {c:"NZ",n:"New Zealand",r:"Oceania",cap:"Wellington",note:"Southern Cross too, but four red-and-white stars on darker blue.",fact:"New Zealand was the first country to give women the right to vote, in 1893."},
+    {c:"PW",n:"Palau",r:"Oceania",cap:"Ngerulmud",note:"Off-center disc, like Bangladesh, but gold on blue.",fact:"Palau created the world's first shark sanctuary in 2009."},
+    {c:"PG",n:"Papua New Guinea",r:"Oceania",cap:"Port Moresby",note:"A bird of paradise and the Southern Cross.",fact:"Papua New Guinea has over 800 languages — the most linguistic diversity of any country on Earth."},
+    {c:"WS",n:"Samoa",r:"Oceania",cap:"Apia",fact:"Samoa was the first country to celebrate the New Year until it switched sides of the Date Line in 2011."},
+    {c:"SB",n:"Solomon Islands",r:"Oceania",cap:"Honiara",fact:"The Solomon Islands consists of over 900 islands."},
+    {c:"TO",n:"Tonga",r:"Oceania",cap:"Nukuʻalofa",fact:"Tonga is the only Pacific monarchy and has never been fully colonized by a European power."},
+    {c:"TV",n:"Tuvalu",r:"Oceania",cap:"Funafuti",note:"Nine stars for nine islands, plus a Union Jack.",fact:"Tuvalu is one of the most at-risk countries from rising sea levels, with a maximum elevation of 4.5 m."},
+    {c:"VU",n:"Vanuatu",r:"Oceania",cap:"Port Vila",fact:"Vanuatu consistently ranks as one of the happiest countries in the world despite being one of the least developed."},
   ];
 
   const REGIONS = ["All","Europe","Middle East","Asia","Africa","North America","South America","Oceania"];
-
-  // Emoji map — works offline, no CDN needed
-  const FLAG_EMOJI = {
-    AL:"🇦🇱",AD:"🇦🇩",AT:"🇦🇹",BY:"🇧🇾",BE:"🇧🇪",BA:"🇧🇦",BG:"🇧🇬",HR:"🇭🇷",CY:"🇨🇾",CZ:"🇨🇿",
-    DK:"🇩🇰",EE:"🇪🇪",FI:"🇫🇮",FR:"🇫🇷",DE:"🇩🇪",GR:"🇬🇷",HU:"🇭🇺",IS:"🇮🇸",IE:"🇮🇪",IT:"🇮🇹",
-    XK:"🇽🇰",LV:"🇱🇻",LI:"🇱🇮",LT:"🇱🇹",LU:"🇱🇺",MT:"🇲🇹",MD:"🇲🇩",MC:"🇲🇨",ME:"🇲🇪",NL:"🇳🇱",
-    MK:"🇲🇰",NO:"🇳🇴",PL:"🇵🇱",PT:"🇵🇹",RO:"🇷🇴",RU:"🇷🇺",SM:"🇸🇲",RS:"🇷🇸",SK:"🇸🇰",SI:"🇸🇮",
-    ES:"🇪🇸",SE:"🇸🇪",CH:"🇨🇭",UA:"🇺🇦",GB:"🇬🇧",VA:"🇻🇦",
-    BH:"🇧🇭",IQ:"🇮🇶",IR:"🇮🇷",IL:"🇮🇱",JO:"🇯🇴",KW:"🇰🇼",LB:"🇱🇧",OM:"🇴🇲",PS:"🇵🇸",QA:"🇶🇦",
-    SA:"🇸🇦",SY:"🇸🇾",TR:"🇹🇷",AE:"🇦🇪",YE:"🇾🇪",
-    AF:"🇦🇫",AM:"🇦🇲",AZ:"🇦🇿",BD:"🇧🇩",BT:"🇧🇹",BN:"🇧🇳",KH:"🇰🇭",CN:"🇨🇳",GE:"🇬🇪",IN:"🇮🇳",
-    ID:"🇮🇩",JP:"🇯🇵",KZ:"🇰🇿",KP:"🇰🇵",KR:"🇰🇷",KG:"🇰🇬",LA:"🇱🇦",MY:"🇲🇾",MV:"🇲🇻",MN:"🇲🇳",
-    MM:"🇲🇲",NP:"🇳🇵",PK:"🇵🇰",PH:"🇵🇭",SG:"🇸🇬",LK:"🇱🇰",TW:"🇹🇼",TJ:"🇹🇯",TH:"🇹🇭",TL:"🇹🇱",
-    TM:"🇹🇲",UZ:"🇺🇿",VN:"🇻🇳",
-    DZ:"🇩🇿",AO:"🇦🇴",BJ:"🇧🇯",BW:"🇧🇼",BF:"🇧🇫",BI:"🇧🇮",CV:"🇨🇻",CM:"🇨🇲",CF:"🇨🇫",TD:"🇹🇩",
-    KM:"🇰🇲",CG:"🇨🇬",CD:"🇨🇩",DJ:"🇩🇯",EG:"🇪🇬",GQ:"🇬🇶",ER:"🇪🇷",SZ:"🇸🇿",ET:"🇪🇹",GA:"🇬🇦",
-    GM:"🇬🇲",GH:"🇬🇭",GN:"🇬🇳",GW:"🇬🇼",CI:"🇨🇮",KE:"🇰🇪",LS:"🇱🇸",LR:"🇱🇷",LY:"🇱🇾",MG:"🇲🇬",
-    MW:"🇲🇼",ML:"🇲🇱",MR:"🇲🇷",MU:"🇲🇺",MA:"🇲🇦",MZ:"🇲🇿",NA:"🇳🇦",NE:"🇳🇪",NG:"🇳🇬",RW:"🇷🇼",
-    ST:"🇸🇹",SN:"🇸🇳",SC:"🇸🇨",SL:"🇸🇱",SO:"🇸🇴",ZA:"🇿🇦",SS:"🇸🇸",SD:"🇸🇩",TZ:"🇹🇿",TG:"🇹🇬",
-    TN:"🇹🇳",UG:"🇺🇬",ZM:"🇿🇲",ZW:"🇿🇼",
-    AG:"🇦🇬",BS:"🇧🇸",BB:"🇧🇧",BZ:"🇧🇿",CA:"🇨🇦",CR:"🇨🇷",CU:"🇨🇺",DM:"🇩🇲",DO:"🇩🇴",SV:"🇸🇻",
-    GD:"🇬🇩",GT:"🇬🇹",HT:"🇭🇹",HN:"🇭🇳",JM:"🇯🇲",MX:"🇲🇽",NI:"🇳🇮",PA:"🇵🇦",KN:"🇰🇳",LC:"🇱🇨",
-    VC:"🇻🇨",TT:"🇹🇹",US:"🇺🇸",
-    AR:"🇦🇷",BO:"🇧🇴",BR:"🇧🇷",CL:"🇨🇱",CO:"🇨🇴",EC:"🇪🇨",GY:"🇬🇾",PY:"🇵🇾",PE:"🇵🇪",SR:"🇸🇷",
-    UY:"🇺🇾",VE:"🇻🇪",
-    AU:"🇦🇺",FJ:"🇫🇯",KI:"🇰🇮",MH:"🇲🇭",FM:"🇫🇲",NR:"🇳🇷",NZ:"🇳🇿",PW:"🇵🇼",PG:"🇵🇬",WS:"🇼🇸",
-    SB:"🇸🇧",TO:"🇹🇴",TV:"🇹🇻",VU:"🇻🇺"
-  };
 
   const PATTERNS = [
     {
@@ -605,6 +397,21 @@
       codes:["JO","PS","SD","KW","IQ","SY"]
     },
     {
+      title:"Southern Cross flags",
+      body:"The Southern Cross constellation appears on flags of countries in the Southern Hemisphere. Each uses a different arrangement and color scheme.",
+      codes:["AU","NZ","PG","FJ","SB","WS"]
+    },
+    {
+      title:"Crescent & star flags",
+      body:"The crescent moon and star is an ancient symbol adopted by the Ottoman Empire and widely used across Muslim-majority nations today.",
+      codes:["TR","PK","MY","TN","DZ","AZ","UZ","TM"]
+    },
+    {
+      title:"Animals & creatures on flags",
+      body:"A surprisingly large number of flags feature living creatures — from eagles to dragons to rare birds. Each animal carries a national story.",
+      codes:["BT","AL","MX","UG","MX","LK","DM","PG"]
+    },
+    {
       title:"Near-duplicate pairs",
       body:"These get confused constantly because only one small detail differs — shade, ratio, or stripe order.",
       codes:["ID","MC","PL","TD","RO","IE","CI"]
@@ -616,7 +423,6 @@
     },
   ];
 
-  // Country name lookup for emoji pills
   const NAME_BY_CODE = {};
   COUNTRIES.forEach(c => { NAME_BY_CODE[c.c] = c.n; });
 
@@ -649,9 +455,12 @@
   });
 
   // ---------- Study ----------
-  const chipsEl = document.getElementById("chips");
-  const gridEl  = document.getElementById("studyGrid");
+  const chipsEl    = document.getElementById("chips");
+  const gridEl     = document.getElementById("studyGrid");
+  const searchEl   = document.getElementById("searchInput");
+  const noResults  = document.getElementById("noResults");
   let activeRegion = "All";
+  let searchQuery  = "";
 
   REGIONS.forEach(r=>{
     const chip = document.createElement("button");
@@ -666,23 +475,45 @@
     chipsEl.appendChild(chip);
   });
 
+  searchEl.addEventListener("input", ()=>{
+    searchQuery = searchEl.value.trim().toLowerCase();
+    renderStudy();
+  });
+
   function renderStudy(){
     gridEl.innerHTML = "";
-    const list = activeRegion==="All" ? COUNTRIES : COUNTRIES.filter(c=>c.r===activeRegion);
+    let list = activeRegion==="All" ? COUNTRIES : COUNTRIES.filter(c=>c.r===activeRegion);
+    if(searchQuery){
+      list = list.filter(c=>
+        c.n.toLowerCase().includes(searchQuery) ||
+        c.cap.toLowerCase().includes(searchQuery) ||
+        c.c.toLowerCase().includes(searchQuery)
+      );
+    }
+    noResults.style.display = list.length === 0 ? "block" : "none";
     list.forEach(country=>{
       const card = document.createElement("div");
       card.className = "card";
       const tilt = tiltFor(country.c);
+      const lc = country.c.toLowerCase();
       card.innerHTML = `
-        <div class="card-inner" style="transform:rotate(${tilt}deg)">
-          <div class="card-face card-front">${flagImg(country.c,"study",country.n)}<div class="card-name">${country.n}</div></div>
+        <div class="card-inner" style="--tilt:${tilt}deg">
+          <div class="card-face card-front">
+            ${flagImg(country.c,"study",country.n)}
+            <div class="card-name">${country.n}</div>
+          </div>
           <div class="card-face card-back">
+            <img class="cb-flag" src="https://flagcdn.com/w160/${lc}.png" alt="" loading="lazy">
             <div class="nm">${country.n}</div>
+            <div class="cap">🏛 ${country.cap}</div>
             ${country.note ? `<div class="nt">${country.note}</div>` : ""}
+            ${country.fact ? `<div class="fact">${country.fact}</div>` : ""}
           </div>
           <div class="stamp">${country.c}</div>
         </div>`;
       card.addEventListener("click", ()=>card.classList.toggle("flipped"));
+      // apply tilt via JS so back face stays unrotated
+      card.querySelector(".card-inner").style.transform = `rotate(${tilt}deg)`;
       gridEl.appendChild(card);
     });
   }
@@ -693,19 +524,34 @@
   PATTERNS.forEach(p=>{
     const div = document.createElement("div");
     div.className = "pattern";
-    const flags = p.codes.map(flagPill).join("");
+    // dedupe codes
+    const seen = new Set();
+    const codes = p.codes.filter(c=>{ if(seen.has(c)) return false; seen.add(c); return true; });
+    const flags = codes.map(flagPill).join("");
     div.innerHTML = `<h3>${p.title}</h3><p>${p.body}</p><div class="flags">${flags}</div>`;
     patternsList.appendChild(div);
   });
 
   // ---------- Quiz ----------
-  const quizFlag     = document.getElementById("quizFlag");
-  const quizOpts     = document.getElementById("quizOpts");
-  const quizStats    = document.getElementById("quizStats");
-  const quizFeedback = document.getElementById("quizFeedback");
-  const resetBtn     = document.getElementById("resetBtn");
+  const quizFlag      = document.getElementById("quizFlag");
+  const quizOpts      = document.getElementById("quizOpts");
+  const quizStats     = document.getElementById("quizStats");
+  const quizFeedback  = document.getElementById("quizFeedback");
+  const quizQuestion  = document.getElementById("quizQuestion");
+  const resetBtn      = document.getElementById("resetBtn");
+  const modeBtns      = document.querySelectorAll(".quiz-mode-btn");
 
-  const STORAGE_KEY = "flag-atlas-progress";
+  let quizMode = "flag"; // "flag" or "capital"
+  modeBtns.forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      quizMode = btn.dataset.mode;
+      modeBtns.forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      nextQuestion();
+    });
+  });
+
+  const STORAGE_KEY = "flag-atlas-progress-v2";
   let progress = { weights:{}, correct:0, attempted:0 };
   let current  = null;
   let answered = false;
@@ -719,14 +565,14 @@
           progress = Object.assign({weights:{},correct:0,attempted:0}, parsed);
         }
       }
-    }catch(e){ /* no saved progress yet */ }
+    }catch(e){}
     nextQuestion();
   }
 
   async function saveProgress(){
     try{
       await window.storage.set(STORAGE_KEY, JSON.stringify(progress), false);
-    }catch(e){ /* storage unavailable — quiz still works */ }
+    }catch(e){}
   }
 
   function weightedPick(){
@@ -742,33 +588,58 @@
   function nextQuestion(){
     answered = false;
     current  = weightedPick();
-    quizFlag.innerHTML = flagImg(current.c,"quiz",current.n);
     quizFeedback.textContent = "";
 
-    const distractors = [];
-    const pool = COUNTRIES.filter(c=>c.c !== current.c);
-    while(distractors.length < 3 && pool.length){
-      const idx = Math.floor(Math.random()*pool.length);
-      distractors.push(pool.splice(idx,1)[0]);
-    }
-    const options = [current, ...distractors].sort(()=>Math.random()-0.5);
+    if(quizMode === "flag"){
+      // Show flag, pick country name
+      quizFlag.innerHTML = flagImg(current.c,"quiz",current.n);
+      quizQuestion.textContent = "Which country does this flag belong to?";
 
-    quizOpts.innerHTML = "";
-    options.forEach(opt=>{
-      const btn = document.createElement("button");
-      btn.className = "opt";
-      btn.textContent = opt.n;
-      btn.addEventListener("click", ()=>handleAnswer(btn, opt));
-      quizOpts.appendChild(btn);
-    });
+      const distractors = [];
+      const pool = COUNTRIES.filter(c=>c.c !== current.c);
+      while(distractors.length < 3 && pool.length){
+        const idx = Math.floor(Math.random()*pool.length);
+        distractors.push(pool.splice(idx,1)[0]);
+      }
+      const options = [current, ...distractors].sort(()=>Math.random()-0.5);
+      quizOpts.innerHTML = "";
+      options.forEach(opt=>{
+        const btn = document.createElement("button");
+        btn.className = "opt";
+        btn.textContent = opt.n;
+        btn.addEventListener("click", ()=>handleAnswer(btn, opt.c === current.c, opt.n, current.n));
+        quizOpts.appendChild(btn);
+      });
+
+    } else {
+      // Show country name + flag, pick capital
+      quizFlag.innerHTML = `${flagImg(current.c,"quiz",current.n)}<div style="font-family:'Fraunces',serif;font-size:20px;font-weight:700;color:var(--parchment);margin-top:8px;">${current.n}</div>`;
+      quizQuestion.textContent = "What is the capital city?";
+
+      const distractors = [];
+      const pool = COUNTRIES.filter(c=>c.c !== current.c);
+      while(distractors.length < 3 && pool.length){
+        const idx = Math.floor(Math.random()*pool.length);
+        distractors.push(pool.splice(idx,1)[0]);
+      }
+      const options = [current, ...distractors].sort(()=>Math.random()-0.5);
+      quizOpts.innerHTML = "";
+      options.forEach(opt=>{
+        const btn = document.createElement("button");
+        btn.className = "opt";
+        btn.textContent = opt.cap;
+        btn.style.fontSize = "12.5px";
+        btn.addEventListener("click", ()=>handleAnswer(btn, opt.c === current.c, opt.cap, current.cap));
+        quizOpts.appendChild(btn);
+      });
+    }
     renderStats();
   }
 
-  function handleAnswer(btn, opt){
+  function handleAnswer(btn, isCorrect, chosenLabel, correctLabel){
     if(answered) return;
     answered = true;
     progress.attempted++;
-    const isCorrect = opt.c === current.c;
     if(isCorrect){
       progress.correct++;
       progress.weights[current.c] = Math.max(1, (progress.weights[current.c]||1) * 0.5);
@@ -777,15 +648,15 @@
     } else {
       progress.weights[current.c] = (progress.weights[current.c]||1) + 2;
       btn.classList.add("wrong");
-      quizFeedback.textContent = "That was " + current.n + " — it'll come back around sooner.";
+      quizFeedback.textContent = `The answer was "${correctLabel}" — it'll come back sooner.`;
       document.querySelectorAll(".opt").forEach(o=>{
-        if(o.textContent === current.n) o.classList.add("correct");
+        if(o.textContent === correctLabel) o.classList.add("correct");
       });
     }
     document.querySelectorAll(".opt").forEach(o=>o.disabled = true);
     renderStats();
     saveProgress();
-    setTimeout(nextQuestion, isCorrect ? 650 : 1400);
+    setTimeout(nextQuestion, isCorrect ? 650 : 1500);
   }
 
   function renderStats(){
