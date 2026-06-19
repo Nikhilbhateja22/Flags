@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flag Atlas — Field Notes for Recall</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16243D;
+    --ink-light:#22385C;
+    --ink-line:#3A5278;
+    --parchment:#F2E8D2;
+    --parchment-dim:#E5D8B8;
+    --brass:#C9A24B;
+    --brass-bright:#E0BD6B;
+    --teal:#3E6E64;
+    --rust:#9C4332;
+    --text-ink:#F2E8D2;
+    --text-parchment:#1B2A4A;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--text-ink);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+  }
+  .wrap{max-width:980px;margin:0 auto;padding:28px 20px 60px;}
+
+  /* Header */
+  header{margin-bottom:22px;}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--brass-bright);
+    margin:0 0 6px;
+  }
+  h1{
+    font-family:'Fraunces',serif;
+    font-weight:900;
+    font-size:clamp(28px,5vw,42px);
+    margin:0 0 6px;
+    letter-spacing:-.01em;
+  }
+  .sub{
+    color:#C8D3E6;
+    font-size:14.5px;
+    max-width:560px;
+    line-height:1.5;
+    margin:0;
+  }
+
+  /* Tabs */
+  nav.tabs{
+    display:flex;
+    gap:2px;
+    margin:26px 0 22px;
+    border-bottom:1px solid var(--ink-line);
+  }
+  nav.tabs button{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    background:none;
+    border:none;
+    color:#8FA1C2;
+    padding:10px 16px 12px;
+    cursor:pointer;
+    border-bottom:2px solid transparent;
+    transition:color .15s, border-color .15s;
+  }
+  nav.tabs button:hover{color:var(--text-ink);}
+  nav.tabs button.active{
+    color:var(--brass-bright);
+    border-bottom-color:var(--brass);
+  }
+  nav.tabs button:focus-visible{outline:2px solid var(--brass-bright);outline-offset:2px;}
+
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  /* Region chips (Study) */
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;}
+  .chip{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    padding:6px 13px;
+    border-radius:999px;
+    border:1px solid var(--ink-line);
+    background:var(--ink-light);
+    color:#C8D3E6;
+    cursor:pointer;
+  }
+  .chip.active{
+    background:var(--brass);
+    color:var(--ink);
+    border-color:var(--brass);
+    font-weight:600;
+  }
+  .chip:focus-visible{outline:2px solid var(--brass-bright);outline-offset:2px;}
+
+  /* Card grid */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(132px,1fr));
+    gap:14px;
+  }
+  .card{
+    position:relative;
+    aspect-ratio:1/1.05;
+    cursor:pointer;
+    perspective:600px;
+  }
+  .card-inner{
+    position:relative;
+    width:100%;height:100%;
+    transition:transform .45s cubic-bezier(.4,.2,.2,1), rotate .2s;
+    transform-style:preserve-3d;
+  }
+  .card.flipped .card-inner{transform:rotateY(180deg);}
+  .card-face{
+    position:absolute;inset:0;
+    backface-visibility:hidden;
+    border-radius:6px;
+    background:var(--parchment);
+    border:2px dashed var(--brass);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    box-shadow:0 3px 8px rgba(0,0,0,.25);
+  }
+  .card-front{padding:14px;flex-direction:column;gap:8px;}
+  .card-name{
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:11.5px;
+    color:var(--text-parchment);
+    text-align:center;
+    line-height:1.25;
+    padding:0 4px;
+  }
+  .flag-img{
+    display:block;
+    border-radius:3px;
+    border:1px solid rgba(27,42,74,.25);
+    box-shadow:0 1px 4px rgba(0,0,0,.25);
+    object-fit:cover;
+    background:#fff;
+  }
+  .flag-img.study{height:54px;max-width:100%;}
+  .flag-img.quiz{height:130px;}
+  .flag-img.pattern{height:24px;border-radius:2px;}
+  .card-back{
+    transform:rotateY(180deg);
+    color:var(--text-parchment);
+    padding:8px;
+    text-align:center;
+  }
+  .card-back .nm{
+    font-family:'Fraunces',serif;
+    font-weight:700;
+    font-size:13.5px;
+    line-height:1.2;
+    margin-bottom:4px;
+  }
+  .card-back .nt{
+    font-size:10.5px;
+    line-height:1.3;
+    color:#4A5A7A;
+  }
+  .stamp{
+    position:absolute;top:-7px;right:-7px;
+    width:30px;height:30px;border-radius:50%;
+    background:var(--ink);
+    border:2px solid var(--brass);
+    color:var(--brass-bright);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:9px;font-weight:600;
+    display:flex;align-items:center;justify-content:center;
+    letter-spacing:.02em;
+  }
+
+  /* Quiz */
+  .quiz-box{
+    max-width:440px;margin:0 auto;
+    text-align:center;
+  }
+  .quiz-flag{
+    margin:10px 0 6px;
+    display:flex;
+    justify-content:center;
+  }
+  .quiz-stats{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:#8FA1C2;
+    margin-bottom:22px;
+  }
+  .quiz-stats span{color:var(--brass-bright);}
+  .opt-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  .opt{
+    font-family:'Inter',sans-serif;
+    font-size:14.5px;
+    font-weight:600;
+    padding:14px 10px;
+    border-radius:6px;
+    border:1px solid var(--ink-line);
+    background:var(--ink-light);
+    color:var(--text-ink);
+    cursor:pointer;
+    transition:background .15s,border-color .15s,transform .1s;
+  }
+  .opt:hover{border-color:var(--brass);}
+  .opt:focus-visible{outline:2px solid var(--brass-bright);outline-offset:2px;}
+  .opt.correct{background:var(--teal);border-color:var(--teal);}
+  .opt.wrong{background:var(--rust);border-color:var(--rust);}
+  .opt[disabled]{cursor:default;}
+  .feedback{
+    min-height:20px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+    margin-top:16px;
+    color:var(--brass-bright);
+  }
+  .reset-link{
+    margin-top:30px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:#6E83AB;
+    background:none;border:none;cursor:pointer;
+    text-decoration:underline;
+  }
+
+  /* Patterns tab */
+  .pattern{
+    background:var(--ink-light);
+    border:1px solid var(--ink-line);
+    border-radius:6px;
+    padding:16px 18px;
+    margin-bottom:14px;
+  }
+  .pattern h3{
+    font-family:'Fraunces',serif;
+    font-size:16px;
+    margin:0 0 6px;
+    color:var(--brass-bright);
+  }
+  .pattern p{
+    font-size:13px;line-height:1.5;color:#C8D3E6;margin:0 0 10px;
+  }
+  .pattern .flags{
+    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  }
+
+  footer{
+    margin-top:40px;
+    padding-top:16px;
+    border-top:1px solid var(--ink-line);
+    font-size:11.5px;
+    color:#6E83AB;
+    line-height:1.6;
+  }
+  .loading{font-family:'IBM Plex Mono',monospace;font-size:12px;color:#8FA1C2;}
+
+  @media (prefers-reduced-motion: reduce){
+    .card-inner{transition:none;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Field Atlas · 192 entries</p>
+    <h1>Flag Atlas</h1>
+    <p class="sub">Study by region to learn the patterns first, then drill recall in the quiz. Missed flags come back around more often — that's the point.</p>
+  </header>
+
+  <nav class="tabs">
+    <button data-tab="study" class="active">Study</button>
+    <button data-tab="quiz">Quiz</button>
+    <button data-tab="patterns">Patterns</button>
+  </nav>
+
+  <section class="panel active" id="panel-study">
+    <div class="chips" id="chips"></div>
+    <div class="grid" id="studyGrid"></div>
+  </section>
+
+  <section class="panel" id="panel-quiz">
+    <div class="quiz-box">
+      <div class="quiz-flag" id="quizFlag"></div>
+      <div class="quiz-stats" id="quizStats">Loading your progress…</div>
+      <div class="opt-grid" id="quizOpts"></div>
+      <div class="feedback" id="quizFeedback"></div>
+      <button class="reset-link" id="resetBtn">reset progress</button>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-patterns">
+    <div id="patternsList"></div>
+  </section>
+
+  <footer>
+    Flag images load from flagcdn.com, so they render consistently on every OS and browser (this needs an internet connection on the page itself).<br>
+    Quiz progress (which flags you miss most) is saved on this device only.
+  </footer>
+</div>
+
+<script>
+(function(){
+
+  const COUNTRIES = [
+    // Europe
+    {c:"AL",n:"Albania",r:"Europe"},
+    {c:"AD",n:"Andorra",r:"Europe"},
+    {c:"AT",n:"Austria",r:"Europe"},
+    {c:"BY",n:"Belarus",r:"Europe"},
+    {c:"BE",n:"Belgium",r:"Europe"},
+    {c:"BA",n:"Bosnia and Herzegovina",r:"Europe"},
+    {c:"BG",n:"Bulgaria",r:"Europe"},
+    {c:"HR",n:"Croatia",r:"Europe",note:"Checkerboard shield is the giveaway."},
+    {c:"CY",n:"Cyprus",r:"Europe",note:"Shows a copper map of the island itself."},
+    {c:"CZ",n:"Czechia",r:"Europe",note:"Like Poland's colors, but with a blue wedge."},
+    {c:"DK",n:"Denmark",r:"Europe",note:"Oldest continuously used national flag design."},
+    {c:"EE",n:"Estonia",r:"Europe"},
+    {c:"FI",n:"Finland",r:"Europe"},
+    {c:"FR",n:"France",r:"Europe"},
+    {c:"DE",n:"Germany",r:"Europe"},
+    {c:"GR",n:"Greece",r:"Europe"},
+    {c:"HU",n:"Hungary",r:"Europe"},
+    {c:"IS",n:"Iceland",r:"Europe"},
+    {c:"IE",n:"Ireland",r:"Europe",note:"Mirror image of Ivory Coast's colors."},
+    {c:"IT",n:"Italy",r:"Europe"},
+    {c:"XK",n:"Kosovo",r:"Europe",note:"Newest design language: map silhouette + stars."},
+    {c:"LV",n:"Latvia",r:"Europe"},
+    {c:"LI",n:"Liechtenstein",r:"Europe",note:"Added the crown after a 1936 mix-up with Haiti's flag."},
+    {c:"LT",n:"Lithuania",r:"Europe"},
+    {c:"LU",n:"Luxembourg",r:"Europe",note:"Near-identical to the Netherlands, just lighter blue and wider."},
+    {c:"MT",n:"Malta",r:"Europe"},
+    {c:"MD",n:"Moldova",r:"Europe"},
+    {c:"MC",n:"Monaco",r:"Europe",note:"Red over white — same colors as Indonesia and Poland, reversed."},
+    {c:"ME",n:"Montenegro",r:"Europe"},
+    {c:"NL",n:"Netherlands",r:"Europe"},
+    {c:"MK",n:"North Macedonia",r:"Europe"},
+    {c:"NO",n:"Norway",r:"Europe"},
+    {c:"PL",n:"Poland",r:"Europe",note:"White over red — opposite of Monaco/Indonesia."},
+    {c:"PT",n:"Portugal",r:"Europe"},
+    {c:"RO",n:"Romania",r:"Europe",note:"Near-identical to Chad — only the shade of blue differs."},
+    {c:"RU",n:"Russia",r:"Europe"},
+    {c:"SM",n:"San Marino",r:"Europe"},
+    {c:"RS",n:"Serbia",r:"Europe"},
+    {c:"SK",n:"Slovakia",r:"Europe"},
+    {c:"SI",n:"Slovenia",r:"Europe"},
+    {c:"ES",n:"Spain",r:"Europe"},
+    {c:"SE",n:"Sweden",r:"Europe"},
+    {c:"CH",n:"Switzerland",r:"Europe",note:"One of only two square national flags."},
+    {c:"UA",n:"Ukraine",r:"Europe"},
+    {c:"GB",n:"United Kingdom",r:"Europe"},
+    {c:"VA",n:"Vatican City",r:"Europe",note:"The other square flag."},
+
+    // Middle East
+    {c:"BH",n:"Bahrain",r:"Middle East"},
+    {c:"IQ",n:"Iraq",r:"Middle East"},
+    {c:"IR",n:"Iran",r:"Middle East"},
+    {c:"IL",n:"Israel",r:"Middle East"},
+    {c:"JO",n:"Jordan",r:"Middle East"},
+    {c:"KW",n:"Kuwait",r:"Middle East"},
+    {c:"LB",n:"Lebanon",r:"Middle East",note:"Cedar tree, centered."},
+    {c:"OM",n:"Oman",r:"Middle East"},
+    {c:"PS",n:"Palestine",r:"Middle East"},
+    {c:"QA",n:"Qatar",r:"Middle East",note:"Maroon, not red — with a serrated edge."},
+    {c:"SA",n:"Saudi Arabia",r:"Middle East",note:"Script and sword; never flown at half-mast since it bears sacred text."},
+    {c:"SY",n:"Syria",r:"Middle East"},
+    {c:"TR",n:"Turkey",r:"Middle East"},
+    {c:"AE",n:"United Arab Emirates",r:"Middle East"},
+    {c:"YE",n:"Yemen",r:"Middle East"},
+
+    // Asia
+    {c:"AF",n:"Afghanistan",r:"Asia"},
+    {c:"AM",n:"Armenia",r:"Asia"},
+    {c:"AZ",n:"Azerbaijan",r:"Asia"},
+    {c:"BD",n:"Bangladesh",r:"Asia",note:"Red disc sits slightly off-center."},
+    {c:"BT",n:"Bhutan",r:"Asia",note:"A dragon, diagonally split field."},
+    {c:"BN",n:"Brunei",r:"Asia"},
+    {c:"KH",n:"Cambodia",r:"Asia",note:"Angkor Wat silhouette, centered."},
+    {c:"CN",n:"China",r:"Asia"},
+    {c:"GE",n:"Georgia",r:"Asia",note:"Five small red crosses around one large one."},
+    {c:"IN",n:"India",r:"Asia",note:"Ashoka Chakra — a 24-spoke wheel."},
+    {c:"ID",n:"Indonesia",r:"Asia",note:"Red over white — same as Monaco, opposite of Poland."},
+    {c:"JP",n:"Japan",r:"Asia"},
+    {c:"KZ",n:"Kazakhstan",r:"Asia"},
+    {c:"KP",n:"North Korea",r:"Asia"},
+    {c:"KR",n:"South Korea",r:"Asia",note:"Taegeuk circle plus four trigrams."},
+    {c:"KG",n:"Kyrgyzstan",r:"Asia",note:"A 40-ray sun over a tunduk (yurt crown)."},
+    {c:"LA",n:"Laos",r:"Asia"},
+    {c:"MY",n:"Malaysia",r:"Asia"},
+    {c:"MV",n:"Maldives",r:"Asia"},
+    {c:"MN",n:"Mongolia",r:"Asia"},
+    {c:"MM",n:"Myanmar",r:"Asia"},
+    {c:"NP",n:"Nepal",r:"Asia",note:"The only non-rectangular national flag — two stacked pennants."},
+    {c:"PK",n:"Pakistan",r:"Asia"},
+    {c:"PH",n:"Philippines",r:"Asia"},
+    {c:"SG",n:"Singapore",r:"Asia"},
+    {c:"LK",n:"Sri Lanka",r:"Asia",note:"A lion holding a sword."},
+    {c:"TW",n:"Taiwan",r:"Asia"},
+    {c:"TJ",n:"Tajikistan",r:"Asia"},
+    {c:"TH",n:"Thailand",r:"Asia"},
+    {c:"TL",n:"Timor-Leste",r:"Asia"},
+    {c:"TM",n:"Turkmenistan",r:"Asia",note:"A carpet-rug pattern stripe near the hoist."},
+    {c:"UZ",n:"Uzbekistan",r:"Asia"},
+    {c:"VN",n:"Vietnam",r:"Asia"},
+
+    // Africa
+    {c:"DZ",n:"Algeria",r:"Africa"},
+    {c:"AO",n:"Angola",r:"Africa"},
+    {c:"BJ",n:"Benin",r:"Africa"},
+    {c:"BW",n:"Botswana",r:"Africa"},
+    {c:"BF",n:"Burkina Faso",r:"Africa"},
+    {c:"BI",n:"Burundi",r:"Africa"},
+    {c:"CV",n:"Cabo Verde",r:"Africa"},
+    {c:"CM",n:"Cameroon",r:"Africa"},
+    {c:"CF",n:"Central African Republic",r:"Africa"},
+    {c:"TD",n:"Chad",r:"Africa",note:"Near-identical to Romania."},
+    {c:"KM",n:"Comoros",r:"Africa"},
+    {c:"CG",n:"Congo, Republic of",r:"Africa"},
+    {c:"CD",n:"DR Congo",r:"Africa"},
+    {c:"DJ",n:"Djibouti",r:"Africa"},
+    {c:"EG",n:"Egypt",r:"Africa",note:"The golden Eagle of Saladin, centered."},
+    {c:"GQ",n:"Equatorial Guinea",r:"Africa"},
+    {c:"ER",n:"Eritrea",r:"Africa"},
+    {c:"SZ",n:"Eswatini",r:"Africa",note:"A warrior's shield and spears."},
+    {c:"ET",n:"Ethiopia",r:"Africa",note:"The original source of Pan-African green/yellow/red."},
+    {c:"GA",n:"Gabon",r:"Africa"},
+    {c:"GM",n:"Gambia",r:"Africa"},
+    {c:"GH",n:"Ghana",r:"Africa",note:"A black star — first sub-Saharan country to use the Pan-African palette."},
+    {c:"GN",n:"Guinea",r:"Africa"},
+    {c:"GW",n:"Guinea-Bissau",r:"Africa"},
+    {c:"CI",n:"Ivory Coast",r:"Africa",note:"Mirror image of Ireland's colors."},
+    {c:"KE",n:"Kenya",r:"Africa",note:"A Maasai shield and spears over the stripes."},
+    {c:"LS",n:"Lesotho",r:"Africa",note:"A mokorotlo (woven hat), centered."},
+    {c:"LR",n:"Liberia",r:"Africa",note:"Looks like a single-star, single-stripe US flag."},
+    {c:"LY",n:"Libya",r:"Africa"},
+    {c:"MG",n:"Madagascar",r:"Africa"},
+    {c:"MW",n:"Malawi",r:"Africa"},
+    {c:"ML",n:"Mali",r:"Africa"},
+    {c:"MR",n:"Mauritania",r:"Africa"},
+    {c:"MU",n:"Mauritius",r:"Africa"},
+    {c:"MA",n:"Morocco",r:"Africa",note:"A green pentagram on red."},
+    {c:"MZ",n:"Mozambique",r:"Africa",note:"An AK-47 crossed with a hoe, over an open book."},
+    {c:"NA",n:"Namibia",r:"Africa"},
+    {c:"NE",n:"Niger",r:"Africa"},
+    {c:"NG",n:"Nigeria",r:"Africa"},
+    {c:"RW",n:"Rwanda",r:"Africa"},
+    {c:"ST",n:"Sao Tome and Principe",r:"Africa"},
+    {c:"SN",n:"Senegal",r:"Africa",note:"A green star, centered."},
+    {c:"SC",n:"Seychelles",r:"Africa"},
+    {c:"SL",n:"Sierra Leone",r:"Africa"},
+    {c:"SO",n:"Somalia",r:"Africa",note:"Sky blue field, single white star."},
+    {c:"ZA",n:"South Africa",r:"Africa",note:"Six colors in a Y-shape — the most colors on any flag."},
+    {c:"SS",n:"South Sudan",r:"Africa"},
+    {c:"SD",n:"Sudan",r:"Africa"},
+    {c:"TZ",n:"Tanzania",r:"Africa"},
+    {c:"TG",n:"Togo",r:"Africa"},
+    {c:"TN",n:"Tunisia",r:"Africa",note:"Red crescent and star, like Turkey but on a red disc."},
+    {c:"UG",n:"Uganda",r:"Africa",note:"A grey crane, centered."},
+    {c:"ZM",n:"Zambia",r:"Africa"},
+    {c:"ZW",n:"Zimbabwe",r:"Africa"},
+
+    // North America
+    {c:"AG",n:"Antigua and Barbuda",r:"North America"},
+    {c:"BS",n:"Bahamas",r:"North America"},
+    {c:"BB",n:"Barbados",r:"North America"},
+    {c:"BZ",n:"Belize",r:"North America",note:"Most detailed coat of arms of any flag."},
+    {c:"CA",n:"Canada",r:"North America",note:"Maple leaf, centered."},
+    {c:"CR",n:"Costa Rica",r:"North America"},
+    {c:"CU",n:"Cuba",r:"North America",note:"Same layout family as Puerto Rico, colors swapped."},
+    {c:"DM",n:"Dominica",r:"North America",note:"A sisserou parrot, centered."},
+    {c:"DO",n:"Dominican Republic",r:"North America",note:"Only flag with a coat of arms splitting a centered cross."},
+    {c:"SV",n:"El Salvador",r:"North America"},
+    {c:"GD",n:"Grenada",r:"North America"},
+    {c:"GT",n:"Guatemala",r:"North America"},
+    {c:"HT",n:"Haiti",r:"North America"},
+    {c:"HN",n:"Honduras",r:"North America"},
+    {c:"JM",n:"Jamaica",r:"North America",note:"The only national flag with no red, white, or blue."},
+    {c:"MX",n:"Mexico",r:"North America",note:"An eagle eating a snake, centered."},
+    {c:"NI",n:"Nicaragua",r:"North America"},
+    {c:"PA",n:"Panama",r:"North America"},
+    {c:"KN",n:"Saint Kitts and Nevis",r:"North America"},
+    {c:"LC",n:"Saint Lucia",r:"North America"},
+    {c:"VC",n:"Saint Vincent and the Grenadines",r:"North America"},
+    {c:"TT",n:"Trinidad and Tobago",r:"North America"},
+    {c:"US",n:"United States",r:"North America"},
+
+    // South America
+    {c:"AR",n:"Argentina",r:"South America",note:"The Sun of May, like Uruguay."},
+    {c:"BO",n:"Bolivia",r:"South America"},
+    {c:"BR",n:"Brazil",r:"South America",note:"A motto banner runs through the globe."},
+    {c:"CL",n:"Chile",r:"South America",note:"Similar layout to the Texas state flag."},
+    {c:"CO",n:"Colombia",r:"South America",note:"Same colors/order as Ecuador and Venezuela — all once Gran Colombia."},
+    {c:"EC",n:"Ecuador",r:"South America",note:"Colombia's stripes plus a coat of arms."},
+    {c:"GY",n:"Guyana",r:"South America"},
+    {c:"PY",n:"Paraguay",r:"South America",note:"The only flag with a different emblem on each side."},
+    {c:"PE",n:"Peru",r:"South America"},
+    {c:"SR",n:"Suriname",r:"South America"},
+    {c:"UY",n:"Uruguay",r:"South America",note:"Also carries the Sun of May."},
+    {c:"VE",n:"Venezuela",r:"South America",note:"Colombia's stripes plus stars and an arc."},
+
+    // Oceania
+    {c:"AU",n:"Australia",r:"Oceania",note:"Southern Cross plus a Union Jack."},
+    {c:"FJ",n:"Fiji",r:"Oceania"},
+    {c:"KI",n:"Kiribati",r:"Oceania",note:"A rising sun and a frigatebird."},
+    {c:"MH",n:"Marshall Islands",r:"Oceania"},
+    {c:"FM",n:"Micronesia",r:"Oceania",note:"Four stars, one per state."},
+    {c:"NR",n:"Nauru",r:"Oceania"},
+    {c:"NZ",n:"New Zealand",r:"Oceania",note:"Southern Cross too, but four red-and-white stars on darker blue."},
+    {c:"PW",n:"Palau",r:"Oceania",note:"Off-center disc, like Bangladesh, but gold on blue."},
+    {c:"PG",n:"Papua New Guinea",r:"Oceania",note:"A bird of paradise and the Southern Cross."},
+    {c:"WS",n:"Samoa",r:"Oceania"},
+    {c:"SB",n:"Solomon Islands",r:"Oceania"},
+    {c:"TO",n:"Tonga",r:"Oceania"},
+    {c:"TV",n:"Tuvalu",r:"Oceania",note:"Nine stars for nine islands, plus a Union Jack."},
+    {c:"VU",n:"Vanuatu",r:"Oceania"},
+  ];
+
+  const REGIONS = ["All","Europe","Middle East","Asia","Africa","North America","South America","Oceania"];
+
+  const PATTERNS = [
+    {
+      title:"Pan-African colors (green / yellow / red)",
+      body:"Adopted from Ethiopia's flag after it became a symbol of African independence. Order and orientation vary, which is usually the only thing distinguishing them.",
+      codes:["ET","GH","ML","SN","GN","CM"]
+    },
+    {
+      title:"Pan-Slavic colors (red / white / blue, horizontal)",
+      body:"Shared Slavic heritage colors. Watch for a coat of arms or a triangle wedge breaking the plain stripes — that's usually the tell.",
+      codes:["RU","SK","SI","RS","CZ","HR"]
+    },
+    {
+      title:"Nordic cross",
+      body:"An off-center cross on a single field color. The background and cross colors are the only variables.",
+      codes:["NO","SE","DK","FI","IS"]
+    },
+    {
+      title:"Pan-Arab colors (red / white / black / green)",
+      body:"Drawn from the early 20th-century Arab Revolt flag. Most combine a horizontal tricolor with a colored triangle or chevron at the hoist.",
+      codes:["JO","PS","SD","KW","IQ","SY"]
+    },
+    {
+      title:"Near-duplicate pairs",
+      body:"These get confused constantly because only one small detail differs — shade, ratio, or stripe order.",
+      codes:["ID","MC","PL","TD","RO","IE","CI"]
+    },
+    {
+      title:"Gran Colombia legacy (yellow / blue / red)",
+      body:"Colombia, Ecuador, and Venezuela all descend from the same 19th-century union. Ecuador adds a coat of arms; Venezuela adds stars and an arc.",
+      codes:["CO","EC","VE"]
+    },
+  ];
+
+  function flagImg(code, sizeClass, alt){
+    const lc = code.toLowerCase();
+    return `<img class="flag-img ${sizeClass}" src="https://flagcdn.com/w320/${lc}.png" alt="${alt||('Flag of '+code)}" loading="lazy">`;
+  }
+  function tiltFor(code){
+    let h = 0;
+    for(const ch of code) h = (h*31 + ch.charCodeAt(0)) % 7;
+    return (h - 3) * 0.7; // -2.1deg .. 2.1deg
+  }
+
+  // ---------- Tabs ----------
+  const tabBtns = document.querySelectorAll("nav.tabs button");
+  tabBtns.forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      tabBtns.forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+      document.getElementById("panel-"+btn.dataset.tab).classList.add("active");
+    });
+  });
+
+  // ---------- Study ----------
+  const chipsEl = document.getElementById("chips");
+  const gridEl = document.getElementById("studyGrid");
+  let activeRegion = "All";
+
+  REGIONS.forEach(r=>{
+    const chip = document.createElement("button");
+    chip.className = "chip" + (r==="All" ? " active":"");
+    chip.textContent = r;
+    chip.addEventListener("click", ()=>{
+      activeRegion = r;
+      document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));
+      chip.classList.add("active");
+      renderStudy();
+    });
+    chipsEl.appendChild(chip);
+  });
+
+  function renderStudy(){
+    gridEl.innerHTML = "";
+    const list = activeRegion==="All" ? COUNTRIES : COUNTRIES.filter(c=>c.r===activeRegion);
+    list.forEach(country=>{
+      const card = document.createElement("div");
+      card.className = "card";
+      const tilt = tiltFor(country.c);
+      card.innerHTML = `
+        <div class="card-inner" style="transform:rotate(${tilt}deg)">
+          <div class="card-face card-front">${flagImg(country.c,"study",country.n)}<div class="card-name">${country.n}</div></div>
+          <div class="card-face card-back">
+            <div class="nm">${country.n}</div>
+            ${country.note ? `<div class="nt">${country.note}</div>` : ""}
+          </div>
+          <div class="stamp">${country.c}</div>
+        </div>`;
+      card.addEventListener("click", ()=>card.classList.toggle("flipped"));
+      gridEl.appendChild(card);
+    });
+  }
+  renderStudy();
+
+  // ---------- Patterns ----------
+  const patternsList = document.getElementById("patternsList");
+  PATTERNS.forEach(p=>{
+    const div = document.createElement("div");
+    div.className = "pattern";
+    const flags = p.codes.map(c=>flagImg(c,"pattern")).join("");
+    div.innerHTML = `<h3>${p.title}</h3><p>${p.body}</p><div class="flags">${flags}</div>`;
+    patternsList.appendChild(div);
+  });
+
+  // ---------- Quiz ----------
+  const quizFlag = document.getElementById("quizFlag");
+  const quizOpts = document.getElementById("quizOpts");
+  const quizStats = document.getElementById("quizStats");
+  const quizFeedback = document.getElementById("quizFeedback");
+  const resetBtn = document.getElementById("resetBtn");
+
+  const STORAGE_KEY = "flag-atlas-progress";
+  let progress = { weights:{}, correct:0, attempted:0 };
+  let current = null;
+  let answered = false;
+
+  async function loadProgress(){
+    try{
+      const res = await window.storage.get(STORAGE_KEY, false);
+      if(res && res.value){
+        const parsed = JSON.parse(res.value);
+        if(parsed && typeof parsed === "object"){
+          progress = Object.assign({weights:{},correct:0,attempted:0}, parsed);
+        }
+      }
+    }catch(e){
+      // no saved progress yet, start fresh
+    }
+    nextQuestion();
+  }
+  async function saveProgress(){
+    try{
+      await window.storage.set(STORAGE_KEY, JSON.stringify(progress), false);
+    }catch(e){
+      // storage unavailable — quiz still works, just won't persist
+    }
+  }
+
+  function weightedPick(){
+    const total = COUNTRIES.reduce((sum,c)=> sum + (progress.weights[c.c]||1), 0);
+    let r = Math.random() * total;
+    for(const c of COUNTRIES){
+      r -= (progress.weights[c.c]||1);
+      if(r <= 0) return c;
+    }
+    return COUNTRIES[COUNTRIES.length-1];
+  }
+
+  function nextQuestion(){
+    answered = false;
+    current = weightedPick();
+    quizFlag.innerHTML = flagImg(current.c,"quiz",current.n);
+    quizFeedback.textContent = "";
+
+    const distractors = [];
+    const pool = COUNTRIES.filter(c=>c.c !== current.c);
+    while(distractors.length < 3 && pool.length){
+      const idx = Math.floor(Math.random()*pool.length);
+      distractors.push(pool.splice(idx,1)[0]);
+    }
+    const options = [current, ...distractors].sort(()=>Math.random()-0.5);
+
+    quizOpts.innerHTML = "";
+    options.forEach(opt=>{
+      const btn = document.createElement("button");
+      btn.className = "opt";
+      btn.textContent = opt.n;
+      btn.addEventListener("click", ()=>handleAnswer(btn, opt));
+      quizOpts.appendChild(btn);
+    });
+    renderStats();
+  }
+
+  function handleAnswer(btn, opt){
+    if(answered) return;
+    answered = true;
+    progress.attempted++;
+    const isCorrect = opt.c === current.c;
+    if(isCorrect){
+      progress.correct++;
+      progress.weights[current.c] = Math.max(1, (progress.weights[current.c]||1) * 0.5);
+      btn.classList.add("correct");
+      quizFeedback.textContent = "Correct.";
+    } else {
+      progress.weights[current.c] = (progress.weights[current.c]||1) + 2;
+      btn.classList.add("wrong");
+      quizFeedback.textContent = "That was " + current.n + " — it'll come back around sooner.";
+      document.querySelectorAll(".opt").forEach(o=>{
+        if(o.textContent === current.n) o.classList.add("correct");
+      });
+    }
+    document.querySelectorAll(".opt").forEach(o=>o.disabled = true);
+    renderStats();
+    saveProgress();
+    setTimeout(nextQuestion, isCorrect ? 650 : 1400);
+  }
+
+  function renderStats(){
+    const pct = progress.attempted ? Math.round(100*progress.correct/progress.attempted) : 0;
+    quizStats.innerHTML = `<span>${progress.correct}</span> / ${progress.attempted} correct &nbsp;·&nbsp; ${pct}%`;
+  }
+
+  resetBtn.addEventListener("click", async ()=>{
+    progress = { weights:{}, correct:0, attempted:0 };
+    try{ await window.storage.delete(STORAGE_KEY, false); }catch(e){}
+    nextQuestion();
+  });
+
+  loadProgress();
+
+})();
+</script>
+</body>
+</html>
