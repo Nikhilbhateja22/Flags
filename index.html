@@ -153,7 +153,6 @@
   }
   .flag-img.study{height:54px;max-width:100%;}
   .flag-img.quiz{height:130px;}
-  .flag-img.pattern{height:24px;border-radius:2px;}
   .card-back{
     transform:rotateY(180deg);
     color:var(--text-parchment);
@@ -259,6 +258,30 @@
   .pattern .flags{
     display:flex;align-items:center;gap:8px;flex-wrap:wrap;
   }
+  .flag-pill{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:rgba(255,255,255,0.06);
+    border:1px solid var(--ink-line);
+    border-radius:8px;
+    padding:6px 12px 6px 6px;
+  }
+  .flag-pill img{
+    width:48px;
+    height:32px;
+    object-fit:cover;
+    border-radius:3px;
+    border:1px solid rgba(255,255,255,0.15);
+    display:block;
+    background:#1B2A4A;
+  }
+  .flag-pill .fn{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;
+    color:#C8D3E6;
+    white-space:nowrap;
+  }
 
   footer{
     margin-top:40px;
@@ -268,7 +291,6 @@
     color:#6E83AB;
     line-height:1.6;
   }
-  .loading{font-family:'IBM Plex Mono',monospace;font-size:12px;color:#8FA1C2;}
 
   @media (prefers-reduced-motion: reduce){
     .card-inner{transition:none;}
@@ -309,8 +331,9 @@
   </section>
 
   <footer>
-    Flag images load from flagcdn.com, so they render consistently on every OS and browser (this needs an internet connection on the page itself).<br>
-    Quiz progress (which flags you miss most) is saved on this device only.
+    Flag images (Study &amp; Quiz) load from flagcdn.com — they need an internet connection to appear.<br>
+    Pattern flags use built-in emoji so they always show instantly.<br>
+    Quiz progress is saved on this device only.
   </footer>
 </div>
 
@@ -532,6 +555,34 @@
 
   const REGIONS = ["All","Europe","Middle East","Asia","Africa","North America","South America","Oceania"];
 
+  // Emoji map — works offline, no CDN needed
+  const FLAG_EMOJI = {
+    AL:"🇦🇱",AD:"🇦🇩",AT:"🇦🇹",BY:"🇧🇾",BE:"🇧🇪",BA:"🇧🇦",BG:"🇧🇬",HR:"🇭🇷",CY:"🇨🇾",CZ:"🇨🇿",
+    DK:"🇩🇰",EE:"🇪🇪",FI:"🇫🇮",FR:"🇫🇷",DE:"🇩🇪",GR:"🇬🇷",HU:"🇭🇺",IS:"🇮🇸",IE:"🇮🇪",IT:"🇮🇹",
+    XK:"🇽🇰",LV:"🇱🇻",LI:"🇱🇮",LT:"🇱🇹",LU:"🇱🇺",MT:"🇲🇹",MD:"🇲🇩",MC:"🇲🇨",ME:"🇲🇪",NL:"🇳🇱",
+    MK:"🇲🇰",NO:"🇳🇴",PL:"🇵🇱",PT:"🇵🇹",RO:"🇷🇴",RU:"🇷🇺",SM:"🇸🇲",RS:"🇷🇸",SK:"🇸🇰",SI:"🇸🇮",
+    ES:"🇪🇸",SE:"🇸🇪",CH:"🇨🇭",UA:"🇺🇦",GB:"🇬🇧",VA:"🇻🇦",
+    BH:"🇧🇭",IQ:"🇮🇶",IR:"🇮🇷",IL:"🇮🇱",JO:"🇯🇴",KW:"🇰🇼",LB:"🇱🇧",OM:"🇴🇲",PS:"🇵🇸",QA:"🇶🇦",
+    SA:"🇸🇦",SY:"🇸🇾",TR:"🇹🇷",AE:"🇦🇪",YE:"🇾🇪",
+    AF:"🇦🇫",AM:"🇦🇲",AZ:"🇦🇿",BD:"🇧🇩",BT:"🇧🇹",BN:"🇧🇳",KH:"🇰🇭",CN:"🇨🇳",GE:"🇬🇪",IN:"🇮🇳",
+    ID:"🇮🇩",JP:"🇯🇵",KZ:"🇰🇿",KP:"🇰🇵",KR:"🇰🇷",KG:"🇰🇬",LA:"🇱🇦",MY:"🇲🇾",MV:"🇲🇻",MN:"🇲🇳",
+    MM:"🇲🇲",NP:"🇳🇵",PK:"🇵🇰",PH:"🇵🇭",SG:"🇸🇬",LK:"🇱🇰",TW:"🇹🇼",TJ:"🇹🇯",TH:"🇹🇭",TL:"🇹🇱",
+    TM:"🇹🇲",UZ:"🇺🇿",VN:"🇻🇳",
+    DZ:"🇩🇿",AO:"🇦🇴",BJ:"🇧🇯",BW:"🇧🇼",BF:"🇧🇫",BI:"🇧🇮",CV:"🇨🇻",CM:"🇨🇲",CF:"🇨🇫",TD:"🇹🇩",
+    KM:"🇰🇲",CG:"🇨🇬",CD:"🇨🇩",DJ:"🇩🇯",EG:"🇪🇬",GQ:"🇬🇶",ER:"🇪🇷",SZ:"🇸🇿",ET:"🇪🇹",GA:"🇬🇦",
+    GM:"🇬🇲",GH:"🇬🇭",GN:"🇬🇳",GW:"🇬🇼",CI:"🇨🇮",KE:"🇰🇪",LS:"🇱🇸",LR:"🇱🇷",LY:"🇱🇾",MG:"🇲🇬",
+    MW:"🇲🇼",ML:"🇲🇱",MR:"🇲🇷",MU:"🇲🇺",MA:"🇲🇦",MZ:"🇲🇿",NA:"🇳🇦",NE:"🇳🇪",NG:"🇳🇬",RW:"🇷🇼",
+    ST:"🇸🇹",SN:"🇸🇳",SC:"🇸🇨",SL:"🇸🇱",SO:"🇸🇴",ZA:"🇿🇦",SS:"🇸🇸",SD:"🇸🇩",TZ:"🇹🇿",TG:"🇹🇬",
+    TN:"🇹🇳",UG:"🇺🇬",ZM:"🇿🇲",ZW:"🇿🇼",
+    AG:"🇦🇬",BS:"🇧🇸",BB:"🇧🇧",BZ:"🇧🇿",CA:"🇨🇦",CR:"🇨🇷",CU:"🇨🇺",DM:"🇩🇲",DO:"🇩🇴",SV:"🇸🇻",
+    GD:"🇬🇩",GT:"🇬🇹",HT:"🇭🇹",HN:"🇭🇳",JM:"🇯🇲",MX:"🇲🇽",NI:"🇳🇮",PA:"🇵🇦",KN:"🇰🇳",LC:"🇱🇨",
+    VC:"🇻🇨",TT:"🇹🇹",US:"🇺🇸",
+    AR:"🇦🇷",BO:"🇧🇴",BR:"🇧🇷",CL:"🇨🇱",CO:"🇨🇴",EC:"🇪🇨",GY:"🇬🇾",PY:"🇵🇾",PE:"🇵🇪",SR:"🇸🇷",
+    UY:"🇺🇾",VE:"🇻🇪",
+    AU:"🇦🇺",FJ:"🇫🇯",KI:"🇰🇮",MH:"🇲🇭",FM:"🇫🇲",NR:"🇳🇷",NZ:"🇳🇿",PW:"🇵🇼",PG:"🇵🇬",WS:"🇼🇸",
+    SB:"🇸🇧",TO:"🇹🇴",TV:"🇹🇻",VU:"🇻🇺"
+  };
+
   const PATTERNS = [
     {
       title:"Pan-African colors (green / yellow / red)",
@@ -565,14 +616,25 @@
     },
   ];
 
+  // Country name lookup for emoji pills
+  const NAME_BY_CODE = {};
+  COUNTRIES.forEach(c => { NAME_BY_CODE[c.c] = c.n; });
+
   function flagImg(code, sizeClass, alt){
     const lc = code.toLowerCase();
     return `<img class="flag-img ${sizeClass}" src="https://flagcdn.com/w320/${lc}.png" alt="${alt||('Flag of '+code)}" loading="lazy">`;
   }
+
+  function flagPill(code){
+    const name = NAME_BY_CODE[code] || code;
+    const lc   = code.toLowerCase();
+    return `<div class="flag-pill"><img src="https://flagcdn.com/w160/${lc}.png" alt="Flag of ${name}" loading="lazy"><span class="fn">${name}</span></div>`;
+  }
+
   function tiltFor(code){
     let h = 0;
     for(const ch of code) h = (h*31 + ch.charCodeAt(0)) % 7;
-    return (h - 3) * 0.7; // -2.1deg .. 2.1deg
+    return (h - 3) * 0.7;
   }
 
   // ---------- Tabs ----------
@@ -588,7 +650,7 @@
 
   // ---------- Study ----------
   const chipsEl = document.getElementById("chips");
-  const gridEl = document.getElementById("studyGrid");
+  const gridEl  = document.getElementById("studyGrid");
   let activeRegion = "All";
 
   REGIONS.forEach(r=>{
@@ -631,21 +693,21 @@
   PATTERNS.forEach(p=>{
     const div = document.createElement("div");
     div.className = "pattern";
-    const flags = p.codes.map(c=>flagImg(c,"pattern")).join("");
+    const flags = p.codes.map(flagPill).join("");
     div.innerHTML = `<h3>${p.title}</h3><p>${p.body}</p><div class="flags">${flags}</div>`;
     patternsList.appendChild(div);
   });
 
   // ---------- Quiz ----------
-  const quizFlag = document.getElementById("quizFlag");
-  const quizOpts = document.getElementById("quizOpts");
-  const quizStats = document.getElementById("quizStats");
+  const quizFlag     = document.getElementById("quizFlag");
+  const quizOpts     = document.getElementById("quizOpts");
+  const quizStats    = document.getElementById("quizStats");
   const quizFeedback = document.getElementById("quizFeedback");
-  const resetBtn = document.getElementById("resetBtn");
+  const resetBtn     = document.getElementById("resetBtn");
 
   const STORAGE_KEY = "flag-atlas-progress";
   let progress = { weights:{}, correct:0, attempted:0 };
-  let current = null;
+  let current  = null;
   let answered = false;
 
   async function loadProgress(){
@@ -657,17 +719,14 @@
           progress = Object.assign({weights:{},correct:0,attempted:0}, parsed);
         }
       }
-    }catch(e){
-      // no saved progress yet, start fresh
-    }
+    }catch(e){ /* no saved progress yet */ }
     nextQuestion();
   }
+
   async function saveProgress(){
     try{
       await window.storage.set(STORAGE_KEY, JSON.stringify(progress), false);
-    }catch(e){
-      // storage unavailable — quiz still works, just won't persist
-    }
+    }catch(e){ /* storage unavailable — quiz still works */ }
   }
 
   function weightedPick(){
@@ -682,7 +741,7 @@
 
   function nextQuestion(){
     answered = false;
-    current = weightedPick();
+    current  = weightedPick();
     quizFlag.innerHTML = flagImg(current.c,"quiz",current.n);
     quizFeedback.textContent = "";
 
