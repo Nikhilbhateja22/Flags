@@ -70,7 +70,40 @@
   .toolbar-btn:hover{border-color:var(--brass);color:var(--brass-bright);}
   .toolbar-btn.active{background:var(--brass);color:var(--ink);border-color:var(--brass);font-weight:600;}
   .toolbar-btn.active svg{stroke:var(--ink);}
-  .toolbar-btns{display:flex;gap:8px;flex-shrink:0;align-items:center;}
+  .toolbar-btns{display:flex;gap:8px;flex-shrink:0;align-items:center;position:relative;}
+
+  /* Mix dropdown */
+  .mix-dropdown{
+    position:absolute;top:calc(100% + 8px);right:0;z-index:200;
+    background:#1A2E50;border:1px solid var(--ink-line);
+    border-radius:10px;padding:10px;
+    min-width:180px;
+    box-shadow:0 8px 28px rgba(0,0,0,.45);
+    display:none;flex-direction:column;gap:4px;
+  }
+  .mix-dropdown.open{ display:flex; }
+  .mix-dropdown label{
+    display:flex;align-items:center;gap:9px;
+    font-family:'IBM Plex Mono',monospace;font-size:12px;
+    color:#C8D3E6;padding:5px 8px;border-radius:6px;
+    cursor:pointer;transition:background .12s;user-select:none;
+  }
+  .mix-dropdown label:hover{ background:rgba(255,255,255,.07); }
+  .mix-dropdown input[type=checkbox]{ accent-color:var(--brass);width:14px;height:14px;cursor:pointer;flex-shrink:0; }
+  .mix-dropdown .mix-divider{ border:none;border-top:1px solid var(--ink-line);margin:4px 0; }
+  .mix-dropdown .mix-apply{
+    margin-top:4px;width:100%;
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600;
+    padding:7px;border-radius:6px;border:none;
+    background:var(--brass);color:var(--ink);cursor:pointer;
+    transition:background .15s;
+  }
+  .mix-dropdown .mix-apply:hover{ background:var(--brass-bright); }
+  .mix-dropdown .mix-clear{
+    width:100%;font-family:'IBM Plex Mono',monospace;font-size:10.5px;
+    color:#6E83AB;background:none;border:none;cursor:pointer;
+    text-decoration:underline;padding:2px 0;
+  }
 
   /* When names are hidden — card-name fades out, card shrinks slightly */
   .grid.names-hidden .card-name{
@@ -113,6 +146,58 @@
   .card-back .nt{font-size:9px;line-height:1.35;color:#4A5A7A;margin-bottom:4px;}
   .card-back .fact{font-size:8.5px;line-height:1.35;color:#5A6A8A;font-style:italic;border-top:1px solid rgba(27,42,74,.15);padding-top:4px;margin-top:2px;}
   .stamp{position:absolute;top:-7px;right:-7px;width:30px;height:30px;border-radius:50%;background:var(--ink);border:2px solid var(--brass);color:var(--brass-bright);font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;display:flex;align-items:center;justify-content:center;}
+
+  /* ---- Zoom overlay ---- */
+  #zoomOverlay{
+    display:none;
+    position:fixed;inset:0;z-index:9999;
+    background:rgba(10,18,34,.88);
+    backdrop-filter:blur(6px);
+    align-items:center;justify-content:center;
+    flex-direction:column;gap:14px;
+    cursor:zoom-out;
+    animation:fadeIn .15s ease;
+  }
+  #zoomOverlay.visible{ display:flex; }
+  @keyframes fadeIn{from{opacity:0;transform:scale(.94);}to{opacity:1;transform:scale(1);}}
+  #zoomOverlay img{
+    max-width:min(88vw,640px);
+    max-height:60vh;
+    border-radius:8px;
+    box-shadow:0 8px 40px rgba(0,0,0,.7);
+    border:2px solid var(--brass);
+    object-fit:contain;
+    background:#fff;
+  }
+  #zoomOverlay .zoom-label{
+    font-family:'Fraunces',serif;
+    font-weight:700;
+    font-size:clamp(18px,4vw,28px);
+    color:var(--parchment);
+    text-align:center;
+  }
+  #zoomOverlay .zoom-cap{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;
+    color:var(--brass-bright);
+    letter-spacing:.06em;
+  }
+  #zoomOverlay .zoom-hint{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:#5A6A8A;
+    margin-top:4px;
+  }
+  /* Hold-progress ring on card */
+  .card.holding::after{
+    content:'';
+    position:absolute;inset:0;border-radius:6px;
+    background:rgba(200,160,60,.18);
+    border:2px solid var(--brass-bright);
+    pointer-events:none;
+    animation:holdPulse .5s ease forwards;
+  }
+  @keyframes holdPulse{from{opacity:0;}to{opacity:1;}}
 
   /* Streak counter */
   .streak-bar{
@@ -202,6 +287,25 @@
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
           Hide names
         </button>
+        <!-- Mix multi-region picker -->
+        <div style="position:relative;">
+          <button class="toolbar-btn" id="mixBtn">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="12" cy="18" r="3"/><line x1="6" y1="9" x2="12" y2="15"/><line x1="18" y1="9" x2="12" y2="15"/></svg>
+            Mix
+          </button>
+          <div class="mix-dropdown" id="mixDropdown">
+            <label><input type="checkbox" value="Europe"> Europe</label>
+            <label><input type="checkbox" value="Middle East"> Middle East</label>
+            <label><input type="checkbox" value="Asia"> Asia</label>
+            <label><input type="checkbox" value="Africa"> Africa</label>
+            <label><input type="checkbox" value="North America"> North America</label>
+            <label><input type="checkbox" value="South America"> South America</label>
+            <label><input type="checkbox" value="Oceania"> Oceania</label>
+            <hr class="mix-divider">
+            <button class="mix-apply" id="mixApply">Show selected</button>
+            <button class="mix-clear" id="mixClear">Clear & show all</button>
+          </div>
+        </div>
       </div>
     </div>
     <div class="grid" id="studyGrid"></div>
@@ -235,6 +339,14 @@
     Flag images load from flagcdn.com — internet connection required for images.<br>
     Quiz progress is saved on this device only.
   </footer>
+</div>
+
+<!-- Zoom overlay — shown on long-press / hold -->
+<div id="zoomOverlay" role="dialog" aria-modal="true">
+  <img id="zoomImg" src="" alt="">
+  <div class="zoom-label" id="zoomName"></div>
+  <div class="zoom-cap" id="zoomCap"></div>
+  <div class="zoom-hint">Release or tap anywhere to close</div>
 </div>
 
 <script>
@@ -541,7 +653,9 @@
   const noResults  = document.getElementById("noResults");
   let activeRegion = "All";
   let searchQuery  = "";
-  let isShuffled   = false;  // declare here so renderStudy can always read it
+  let isShuffled   = false;
+  let mixedRegions = new Set(); // holds multiple selected regions for Mix mode
+  let attachHold   = ()=>{};
 
   REGIONS.forEach(r=>{
     const chip = document.createElement("button");
@@ -563,7 +677,12 @@
 
   function renderStudy(){
     gridEl.innerHTML = "";
-    let list = activeRegion==="All" ? [...COUNTRIES] : COUNTRIES.filter(c=>c.r===activeRegion);
+    let list;
+    if(mixedRegions.size > 0){
+      list = COUNTRIES.filter(c => mixedRegions.has(c.r));
+    } else {
+      list = activeRegion==="All" ? [...COUNTRIES] : COUNTRIES.filter(c=>c.r===activeRegion);
+    }
     if(searchQuery){
       list = list.filter(c=>
         c.n.toLowerCase().includes(searchQuery) ||
@@ -594,6 +713,7 @@
           <div class="stamp">${country.c}</div>
         </div>`;
       card.addEventListener("click", ()=>card.classList.toggle("flipped"));
+      attachHold(card, country);
       gridEl.appendChild(card);
     });
   }
@@ -618,6 +738,67 @@
     hideNamesBtn.innerHTML = namesHidden
       ? `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Show names`
       : `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg> Hide names`;
+  });
+
+  // ---------- Mix multi-region picker ----------
+  const mixBtn      = document.getElementById("mixBtn");
+  const mixDropdown = document.getElementById("mixDropdown");
+  const mixApply    = document.getElementById("mixApply");
+  const mixClear    = document.getElementById("mixClear");
+  const mixChecks   = mixDropdown.querySelectorAll("input[type=checkbox]");
+
+  mixBtn.addEventListener("click", e=>{
+    e.stopPropagation();
+    mixDropdown.classList.toggle("open");
+  });
+
+  // Close when clicking outside
+  document.addEventListener("click", e=>{
+    if(!mixDropdown.contains(e.target) && e.target !== mixBtn){
+      mixDropdown.classList.remove("open");
+    }
+  });
+
+  function updateMixBtnLabel(){
+    if(mixedRegions.size === 0){
+      mixBtn.classList.remove("active");
+      mixBtn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="12" cy="18" r="3"/><line x1="6" y1="9" x2="12" y2="15"/><line x1="18" y1="9" x2="12" y2="15"/></svg> Mix`;
+    } else {
+      mixBtn.classList.add("active");
+      mixBtn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="12" cy="18" r="3"/><line x1="6" y1="9" x2="12" y2="15"/><line x1="18" y1="9" x2="12" y2="15"/></svg> Mix (${mixedRegions.size})`;
+    }
+  }
+
+  mixApply.addEventListener("click", ()=>{
+    mixedRegions.clear();
+    mixChecks.forEach(cb=>{ if(cb.checked) mixedRegions.add(cb.value); });
+    mixDropdown.classList.remove("open");
+    updateMixBtnLabel();
+    // Deactivate single-region chips when mix is active
+    if(mixedRegions.size > 0){
+      document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));
+    }
+    renderStudy();
+  });
+
+  mixClear.addEventListener("click", ()=>{
+    mixedRegions.clear();
+    mixChecks.forEach(cb=>cb.checked = false);
+    mixDropdown.classList.remove("open");
+    updateMixBtnLabel();
+    // Restore "All" chip
+    activeRegion = "All";
+    document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("active", c.textContent==="All"));
+    renderStudy();
+  });
+
+  // Clicking a single-region chip clears mix mode
+  chipsEl.addEventListener("click", ()=>{
+    if(mixedRegions.size > 0){
+      mixedRegions.clear();
+      mixChecks.forEach(cb=>cb.checked = false);
+      updateMixBtnLabel();
+    }
   });
 
   // ---------- Patterns ----------
@@ -861,6 +1042,64 @@
   });
 
   loadProgress();
+
+  // ---------- Zoom on hold ----------
+  const zoomOverlay = document.getElementById("zoomOverlay");
+  const zoomImg     = document.getElementById("zoomImg");
+  const zoomName    = document.getElementById("zoomName");
+  const zoomCap     = document.getElementById("zoomCap");
+  let holdTimer      = null;
+  let activeHoldCard = null;
+  const HOLD_MS      = 400;
+
+  function openZoom(country){
+    const lc = country.c.toLowerCase();
+    zoomImg.src  = `https://flagcdn.com/w1280/${lc}.png`;
+    zoomImg.alt  = `Flag of ${country.n}`;
+    zoomName.textContent = country.n;
+    zoomCap.textContent  = country.cap ? `🏛 ${country.cap}` : "";
+    zoomOverlay.classList.add("visible");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeZoom(){
+    zoomOverlay.classList.remove("visible");
+    document.body.style.overflow = "";
+    if(activeHoldCard){ activeHoldCard.classList.remove("holding"); activeHoldCard = null; }
+    clearTimeout(holdTimer);
+  }
+
+  zoomOverlay.addEventListener("click",    closeZoom);
+  zoomOverlay.addEventListener("touchend", closeZoom);
+  document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeZoom(); });
+
+  // Assign real attachHold — cards already rendered will get it on next renderStudy call
+  attachHold = function(cardEl, country){
+    function startHold(e){
+      if(e.touches && e.touches.length > 1) return;
+      clearTimeout(holdTimer);
+      activeHoldCard = cardEl;
+      cardEl.classList.add("holding");
+      holdTimer = setTimeout(()=>{
+        openZoom(country);
+        cardEl.classList.remove("holding");
+        activeHoldCard = null;
+      }, HOLD_MS);
+    }
+    function cancelHold(){
+      clearTimeout(holdTimer);
+      if(activeHoldCard === cardEl){ cardEl.classList.remove("holding"); activeHoldCard = null; }
+    }
+    cardEl.addEventListener("mousedown",  startHold);
+    cardEl.addEventListener("mouseup",    cancelHold);
+    cardEl.addEventListener("mouseleave", cancelHold);
+    cardEl.addEventListener("touchstart", startHold,  {passive:true});
+    cardEl.addEventListener("touchend",   cancelHold);
+    cardEl.addEventListener("touchmove",  cancelHold);
+  };
+
+  // Re-render so initial cards get real attachHold listeners
+  renderStudy();
 
 })();
 </script>
