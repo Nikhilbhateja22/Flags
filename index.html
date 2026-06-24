@@ -732,7 +732,13 @@
         c.c.toLowerCase().includes(searchQuery)
       );
     }
-    if(isShuffled) list = list.sort(()=>Math.random()-0.5);
+    if(isShuffled){
+      // Fisher-Yates — genuinely unbiased, no repeating patterns
+      for(let i = list.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [list[i], list[j]] = [list[j], list[i]];
+      }
+    }
     noResults.style.display = list.length === 0 ? "block" : "none";
     list.forEach(country=>{
       const card = document.createElement("div");
@@ -765,8 +771,20 @@
   const shuffleBtn = document.getElementById("shuffleBtn");
 
   shuffleBtn.addEventListener("click", ()=>{
-    isShuffled = !isShuffled;
-    shuffleBtn.classList.toggle("active", isShuffled);
+    // If already shuffled, clicking again gives a NEW shuffle (not just toggle off)
+    if(!isShuffled){
+      isShuffled = true;
+      shuffleBtn.classList.add("active");
+    } else {
+      // already on — reshuffle into a new order
+    }
+    renderStudy();
+  });
+
+  // Double-click or right-click to turn shuffle off
+  shuffleBtn.addEventListener("dblclick", ()=>{
+    isShuffled = false;
+    shuffleBtn.classList.remove("active");
     renderStudy();
   });
 
