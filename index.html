@@ -253,7 +253,41 @@
   .flag-pill img{width:48px;height:32px;object-fit:cover;border-radius:3px;border:1px solid rgba(255,255,255,0.12);display:block;background:#1B2A4A;}
   .flag-pill .fn{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#C8D3E6;white-space:nowrap;}
 
-  footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--ink-line);font-size:11.5px;color:#6E83AB;line-height:1.6;}
+  /* ---- Lookalikes ---- */
+  .la-intro{font-size:13.5px;color:#C8D3E6;line-height:1.6;margin-bottom:22px;max-width:580px;}
+  .la-group{
+    background:var(--ink-light);border:1px solid var(--ink-line);
+    border-radius:10px;padding:18px 20px;margin-bottom:16px;
+  }
+  .la-group h3{
+    font-family:'Fraunces',serif;font-size:15px;
+    color:var(--brass-bright);margin:0 0 4px;
+  }
+  .la-group .la-desc{font-size:12.5px;color:#C8D3E6;line-height:1.5;margin:0 0 16px;}
+  .la-flags{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start;}
+  .la-flag{
+    display:flex;flex-direction:column;align-items:center;gap:7px;
+    background:rgba(255,255,255,0.04);border:1px solid var(--ink-line);
+    border-radius:8px;padding:12px 14px;min-width:130px;flex:1;max-width:200px;
+  }
+  .la-flag img{
+    width:100%;max-width:160px;height:90px;
+    object-fit:cover;border-radius:5px;
+    border:1px solid rgba(255,255,255,.12);
+    background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.3);
+  }
+  .la-flag .la-name{
+    font-family:'Inter',sans-serif;font-weight:700;
+    font-size:12px;color:var(--text-ink);text-align:center;
+  }
+  .la-flag .la-tell{
+    font-family:'IBM Plex Mono',monospace;font-size:10px;
+    color:var(--brass-bright);text-align:center;line-height:1.4;
+  }
+  .la-vs{
+    font-family:'Fraunces',serif;font-size:18px;font-weight:900;
+    color:#3A5278;align-self:center;flex-shrink:0;padding:0 2px;
+  }
   @media(prefers-reduced-motion:reduce){.card-inner{transition:none;}}
 </style>
 </head>
@@ -269,6 +303,7 @@
     <button data-tab="study" class="active">Study</button>
     <button data-tab="quiz">Quiz</button>
     <button data-tab="patterns">Patterns</button>
+    <button data-tab="lookalikes">Lookalikes</button>
   </nav>
 
   <section class="panel active" id="panel-study">
@@ -333,6 +368,11 @@
 
   <section class="panel" id="panel-patterns">
     <div id="patternsList"></div>
+  </section>
+
+  <section class="panel" id="panel-lookalikes">
+    <p class="la-intro">These flags are commonly confused. Study the differences — the small details are the whole point.</p>
+    <div id="lookalikesList"></div>
   </section>
 
   <footer>
@@ -808,12 +848,162 @@
   PATTERNS.forEach(p=>{
     const div = document.createElement("div");
     div.className = "pattern";
-    // dedupe codes
     const seen = new Set();
     const codes = p.codes.filter(c=>{ if(seen.has(c)) return false; seen.add(c); return true; });
     const flags = codes.map(flagPill).join("");
     div.innerHTML = `<h3>${p.title}</h3><p>${p.body}</p><div class="flags">${flags}</div>`;
     patternsList.appendChild(div);
+  });
+
+  // ---------- Lookalikes ----------
+  const LOOKALIKES = [
+    {
+      title:"Indonesia vs Monaco",
+      desc:"Identical red-over-white horizontal bicolor. Indonesia's flag is wider (2:3 ratio), Monaco's is squarer (4:5). Almost impossible to tell apart at a distance.",
+      flags:[
+        {c:"ID", tell:"Wider rectangle (2:3). Red is a slightly deeper shade."},
+        {c:"MC", tell:"More square (4:5). Slightly brighter red."},
+      ]
+    },
+    {
+      title:"Poland vs Monaco",
+      desc:"Both red and white — but Poland is white on top, red on bottom. Monaco is red on top, white on bottom. Easy to mix up when a flag is hanging limp.",
+      flags:[
+        {c:"PL", tell:"White on TOP, red on bottom."},
+        {c:"MC", tell:"Red on TOP, white on bottom."},
+      ]
+    },
+    {
+      title:"Chad vs Romania",
+      desc:"Almost pixel-perfect identical — blue, yellow, red vertical stripes. Chad's blue is very slightly darker. Considered one of the most confusable pairs in the world.",
+      flags:[
+        {c:"TD", tell:"Blue is a darker navy shade."},
+        {c:"RO", tell:"Blue is a brighter cobalt shade."},
+      ]
+    },
+    {
+      title:"Ireland vs Ivory Coast",
+      desc:"Same three colors (green, white, orange) arranged as vertical stripes — just mirrored. Ireland has green on the hoist side; Ivory Coast has orange on the hoist side.",
+      flags:[
+        {c:"IE", tell:"Green → White → Orange (left to right)."},
+        {c:"CI", tell:"Orange → White → Green (left to right)."},
+      ]
+    },
+    {
+      title:"New Zealand vs Australia",
+      desc:"Both have the Union Jack and the Southern Cross on blue. New Zealand's stars are red with white outlines; Australia's are white with more stars and a larger Commonwealth Star below the Union Jack.",
+      flags:[
+        {c:"NZ", tell:"4 red stars with white outline. Darker blue."},
+        {c:"AU", tell:"5 white stars + large 7-point Commonwealth Star below Union Jack."},
+      ]
+    },
+    {
+      title:"Colombia vs Ecuador vs Venezuela",
+      desc:"All three share the same yellow-blue-red horizontal stripes — descendants of Gran Colombia. Ecuador adds a coat of arms; Venezuela adds stars and an arc in the blue band.",
+      flags:[
+        {c:"CO", tell:"Plain stripes, no emblem."},
+        {c:"EC", tell:"Same stripes + coat of arms centered."},
+        {c:"VE", tell:"Same stripes + 8 stars in an arc on the blue band."},
+      ]
+    },
+    {
+      title:"Netherlands vs Luxembourg",
+      desc:"Both have horizontal red-white-blue stripes. Luxembourg's blue is lighter (sky blue vs cobalt) and the flag is slightly wider. Very hard to tell apart when flying.",
+      flags:[
+        {c:"NL", tell:"Deeper cobalt blue stripe."},
+        {c:"LU", tell:"Lighter sky-blue stripe. Wider ratio."},
+      ]
+    },
+    {
+      title:"Russia vs Serbia vs Slovakia vs Slovenia",
+      desc:"Pan-Slavic tricolors — all white-blue-red horizontal bands. The coat of arms or colored wedge is the only reliable tell. Without an emblem they're nearly identical.",
+      flags:[
+        {c:"RU", tell:"Plain stripes — no emblem on the basic version."},
+        {c:"RS", tell:"Red-blue-white (reversed order) + gold coat of arms left side."},
+        {c:"SK", tell:"White-blue-red + Slovak shield coat of arms on left."},
+        {c:"SI", tell:"White-blue-red + coat of arms with Triglav mountain."},
+      ]
+    },
+    {
+      title:"Cuba vs Puerto Rico",
+      desc:"Identical layout — horizontal stripes with a triangle on the hoist and a star inside it. Cuba has a red triangle with a white star; Puerto Rico has a blue triangle with a white star. Stripes are swapped too.",
+      flags:[
+        {c:"CU", tell:"Blue stripes, white stripes, RED triangle, white star."},
+        {c:"PR", tell:"Red stripes, white stripes, BLUE triangle, white star."},
+      ]
+    },
+    {
+      title:"Qatar vs Bahrain",
+      desc:"Both are maroon/red with a serrated white band on the left. Qatar is maroon with 9 points on the serration; Bahrain is red with 5 points. Qatar is also much wider.",
+      flags:[
+        {c:"QA", tell:"Maroon (darker). 9 serrated points. Very wide flag."},
+        {c:"BH", tell:"Bright red. Only 5 serrated points."},
+      ]
+    },
+    {
+      title:"Norway vs Iceland vs Denmark",
+      desc:"All Nordic crosses. Denmark is red with a white cross. Norway adds a blue cross inside the white. Iceland swaps it — blue with a white cross that has red inside.",
+      flags:[
+        {c:"DK", tell:"Red field, plain white cross."},
+        {c:"NO", tell:"Red field, white cross with BLUE inside."},
+        {c:"IS", tell:"Blue field, white cross with RED inside."},
+      ]
+    },
+    {
+      title:"Sweden vs Finland",
+      desc:"Both Nordic crosses but completely different color schemes. Sweden is blue with a yellow cross; Finland is white with a blue cross.",
+      flags:[
+        {c:"SE", tell:"Blue field, yellow cross."},
+        {c:"FI", tell:"White field, blue cross."},
+      ]
+    },
+    {
+      title:"South Korea vs Taiwan",
+      desc:"Both have a white background with a blue and red symbol in the center on a clean field. South Korea has the yin-yang Taegeuk with four trigrams; Taiwan has a white sun on a blue canton over red.",
+      flags:[
+        {c:"KR", tell:"White field, blue/red Taegeuk circle, four black trigrams at corners."},
+        {c:"TW", tell:"Red field, blue canton top-left, white 12-rayed sun inside."},
+      ]
+    },
+    {
+      title:"Senegal vs Mali vs Guinea",
+      desc:"All Pan-African vertical tricolors. Senegal is green-yellow-red with a green star; Mali is green-yellow-red with no emblem; Guinea is red-yellow-green (reversed order).",
+      flags:[
+        {c:"SN", tell:"Green → Yellow → Red + green star in center."},
+        {c:"ML", tell:"Green → Yellow → Red, plain — no star."},
+        {c:"GN", tell:"Red → Yellow → Green (reversed order)."},
+      ]
+    },
+    {
+      title:"Kenya vs South Sudan",
+      desc:"Both have horizontal black, red, and green stripes with white borders — and a symbol centered on the hoist side. Kenya has a Maasai shield and spears; South Sudan has a gold star on a blue triangle.",
+      flags:[
+        {c:"KE", tell:"Black-red-green stripes + Maasai shield & spears centered."},
+        {c:"SS", tell:"Black-red-green stripes + blue triangle with gold star on hoist."},
+      ]
+    },
+  ];
+
+  const lookalikesList = document.getElementById("lookalikesList");
+  LOOKALIKES.forEach(group=>{
+    const div = document.createElement("div");
+    div.className = "la-group";
+    const flagsHTML = group.flags.map((f, i)=>{
+      const lc = f.c.toLowerCase();
+      const name = NAME_BY_CODE[f.c] || f.c;
+      const vs = i < group.flags.length-1 ? `<div class="la-vs">vs</div>` : "";
+      return `
+        <div class="la-flag">
+          <img src="https://flagcdn.com/w320/${lc}.png" alt="Flag of ${name}" loading="lazy">
+          <div class="la-name">${name}</div>
+          <div class="la-tell">${f.tell}</div>
+        </div>${vs}`;
+    }).join("");
+    div.innerHTML = `
+      <h3>${group.title}</h3>
+      <p class="la-desc">${group.desc}</p>
+      <div class="la-flags">${flagsHTML}</div>`;
+    lookalikesList.appendChild(div);
   });
 
   // ---------- Sound Engine (Web Audio API — no external files needed) ----------
